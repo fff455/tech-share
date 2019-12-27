@@ -1,8 +1,9 @@
 # fe-share
 
 ## record
-* [Publication]()
-* [JavaScript]()
+* [Publication](https://github.com/fff455/fe-share/tree/master/Publication)
+* [JavaScript](https://github.com/fff455/fe-share/tree/master/JavaScript)
+* [Vue](https://github.com/fff455/fe-share/tree/master/Vue)
 
 ## members
 * [RedOvO](https://github.com/RedOvO)
