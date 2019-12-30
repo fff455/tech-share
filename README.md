@@ -1,12 +1,19 @@
+
 # fe-share
 
-## record
-* [Publication](https://github.com/fff455/fe-share/tree/master/Publication)
-* [JavaScript](https://github.com/fff455/fe-share/tree/master/JavaScript)
-* [Vue](https://github.com/fff455/fe-share/tree/master/Vue)
+<!-- RECORD-START -->
+## Record
 
-## members
+<!-- RECORD-END -->
+
+<!-- MEMBER-START -->
+## Member
 * [RedOvO](https://github.com/RedOvO)
-* [xiaobaihaha](https://github.com/xiaobaiha)
+* [xiaobaiha](https://github.com/xiaobaiha)
+<!-- MEMBER-END -->
 
-## new content
+<!-- NEW CONTENT-START -->
+## New Content
+
+<!-- NEW CONTENT-END -->
+
