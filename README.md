@@ -17,7 +17,7 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [Node特点&进程与线程.md](https://github.com/fff455/fe-share/tree/master/Node/Node特点&进程与线程.md) 2020-01-10 update.
 * [js构造函数.md](https://github.com/fff455/fe-share/tree/master/JavaScript/js构造函数.md) 2020-01-12 update.
+* [Chrome devtools.md](https://github.com/fff455/fe-share/tree/master/Engineering/Chrome devtools.md) 2020-01-19 update.
 <!-- NEW CONTENT-END -->
 
