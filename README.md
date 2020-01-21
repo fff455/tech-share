@@ -17,8 +17,8 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
+* [js构造函数.md](https://github.com/fff455/fe-share/tree/master/JavaScript/js构造函数.md) 2020-01-12 update.
 * [Chrome-devtools.md](https://github.com/fff455/fe-share/tree/master/Engineering/Chrome-devtools.md) 2020-01-19 update.
 * [js原型与原型链.md](https://github.com/fff455/fe-share/tree/master/JavaScript/js原型与原型链.md) 2020-01-19 update.
-* [js构造函数.md](https://github.com/fff455/fe-share/tree/master/JavaScript/js构造函数.md) 2020-01-21 update.
 <!-- NEW CONTENT-END -->
 
