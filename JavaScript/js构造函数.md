@@ -77,3 +77,5 @@ let Black = new Person('XiaoHei', 'Male');
   let Bai = new PerSon();
   console.log(Bai.name); // "XiaoHong"
   ```
+
+github能直接修改么 试试看
