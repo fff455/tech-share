@@ -67,6 +67,7 @@ let Black = new Person('XiaoHei', 'Male');
   ```
 
   - 而将数组、对象作为返回值时，最终将会返回该数组、对象
+  
   ```javascript
   function Person() {
     this.name = 'XiaoBai';
