@@ -17,8 +17,6 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [Chrome-devtools.md](https://github.com/fff455/fe-share/tree/master/Engineering/Chrome-devtools.md) 2020-01-19 update.
-* [js原型与原型链.md](https://github.com/fff455/fe-share/tree/master/JavaScript/js原型与原型链.md) 2020-01-19 update.
 * [js构造函数.md](https://github.com/fff455/fe-share/tree/master/JavaScript/js构造函数.md) 2020-01-21 update.
 * [BS架构与CS架构.md](https://github.com/fff455/fe-share/tree/master/Engineering/BS架构与CS架构.md) 2020-01-22 update.
 * [Node模块系统.md](https://github.com/fff455/fe-share/tree/master/Node/Node模块系统.md) 2020-01-22 update.
