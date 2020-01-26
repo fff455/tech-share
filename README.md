@@ -20,5 +20,6 @@
 * [js构造函数.md](https://github.com/fff455/fe-share/tree/master/JavaScript/js构造函数.md) 2020-01-21 update.
 * [BS架构与CS架构.md](https://github.com/fff455/fe-share/tree/master/Engineering/BS架构与CS架构.md) 2020-01-22 update.
 * [Node模块系统.md](https://github.com/fff455/fe-share/tree/master/Node/Node模块系统.md) 2020-01-22 update.
+* [Object.defineProperty()简介.md](https://github.com/fff455/fe-share/tree/master/JavaScript/Object.defineProperty()简介.md) 2020-01-26 update.
 <!-- NEW CONTENT-END -->
 
