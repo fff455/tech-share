@@ -17,7 +17,6 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [Object.defineProperty()简介.md](https://github.com/fff455/fe-share/tree/master/JavaScript/Object.defineProperty()简介.md) 2020-01-26 update.
 * [登录鉴权.md](https://github.com/fff455/fe-share/tree/master/Engineering/登录鉴权.md) 2020-02-02 update.
 <!-- NEW CONTENT-END -->
 
