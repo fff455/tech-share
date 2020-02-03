@@ -7,6 +7,7 @@
 * [Engineering](https://github.com/fff455/fe-share/tree/master/Engineering)
 * [JavaScript](https://github.com/fff455/fe-share/tree/master/JavaScript)
 * [Node](https://github.com/fff455/fe-share/tree/master/Node)
+* [Vue](https://github.com/fff455/fe-share/tree/master/Vue)
 <!-- RECORD-END -->
 
 <!-- MEMBER-START -->
@@ -18,5 +19,6 @@
 <!-- NEW CONTENT-START -->
 ## New Content
 * [登录鉴权.md](https://github.com/fff455/fe-share/tree/master/Engineering/登录鉴权.md) 2020-02-02 update.
+* [nextTick()的使用.md](https://github.com/fff455/fe-share/tree/master/Vue/nextTick()的使用.md) 2020-02-03 update.
 <!-- NEW CONTENT-END -->
 
