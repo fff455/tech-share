@@ -18,6 +18,6 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [记录一个问题的探索过程.md](https://github.com/fff455/fe-share/tree/master/Vue/记录一个问题的探索过程.md) 2020-02-09 update.
+* [Promise.md](https://github.com/fff455/fe-share/tree/master/JavaScript/Promise.md) 2020-02-16 update.
 <!-- NEW CONTENT-END -->
 
