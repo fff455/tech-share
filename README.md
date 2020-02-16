@@ -18,8 +18,6 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [nextTick()的使用.md](https://github.com/fff455/fe-share/tree/master/Vue/nextTick()的使用.md) 2020-02-03 update.
-* [Canvas图片处理.md](https://github.com/fff455/fe-share/tree/master/JavaScript/Canvas图片处理.md) 2020-02-09 update.
 * [记录一个问题的探索过程.md](https://github.com/fff455/fe-share/tree/master/Vue/记录一个问题的探索过程.md) 2020-02-09 update.
 <!-- NEW CONTENT-END -->
 
