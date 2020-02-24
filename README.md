@@ -18,6 +18,6 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [Canvas灰度处理原理.md](https://github.com/fff455/fe-share/tree/master/JavaScript/Canvas灰度处理原理.md) 2020-02-17 update.
+
 <!-- NEW CONTENT-END -->
 
