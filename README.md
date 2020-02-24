@@ -19,5 +19,6 @@
 <!-- NEW CONTENT-START -->
 ## New Content
 * [Stream.md](https://github.com/fff455/fe-share/tree/master/Node/Stream.md) 2020-02-24 update.
+* [Promise.md](https://github.com/fff455/fe-share/tree/master/JavaScript/Promise.md) 2020-02-24 update.
 <!-- NEW CONTENT-END -->
 
