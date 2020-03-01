@@ -90,3 +90,37 @@ myReadable.on("readable", chunk => {
 需要注意的是，buffer 大小也是有上限的，默认设置为 16kb，也就是 16384 个字节长度，它最大可设置为 8Mb，没记错的话，这个值好像是 Node 的 new space memory 的大小。
 
 上面介绍了 Readable Stream 大概的机制，还有很多细节部分没有提到，比如 Flowing Mode 在不同 Node 版本中的 Stream 实现不太一样，实际上，它有三个版本，上面提到的是第 2 和 第 3 个版本的实现；再比如 Mixins Mode 模式，一般我们只推荐（允许）使用 ondata 和 onreadable 的一种来处理 Readable Stream，但是如果要求在 Non-Flowing Mode 的情况下使用 ondata 如何实现呢？那么就可以考虑 Mixins Mode 了。
+
+## Writable
+
+数据流过来的时候，会直接写入到资源池，当写入速度比较缓慢或者写入暂停时，数据流会进入队列池缓存起来
+
+![](./images/writable.png)
+
+当生产者写入速度过快，把队列池装满了之后，就会出现「背压」，这个时候是需要告诉生产者暂停生产的，当队列释放之后，Writable Stream 会给生产者发送一个 drain 消息，让它恢复生产。
+
+## pipe
+
+用法
+
+```javascript
+readable.pipe(writable);
+```
+
+readable 通过 pipe（管道）传输给 writable
+
+## Duplex
+
+双工的意思，它的输入和输出可以没有任何关系
+
+![](./images/duplex.png)
+
+Duplex Stream 实现特别简单，它继承了 Readable Stream，并拥有 Writable Stream 的方法，它的 read 和 write 是两个管道，彼此互不干扰
+
+## Transform
+
+Transform Stream 集成了 Duplex Stream，它同样具备 Readable 和 Writable 的能力，只不过它的输入和输出是存在相互关联的，中间做了一次转换处理。常见的处理有 Gzip 压缩、解压等
+
+Transform 的处理就是通过 \_transform 函数将 Duplex 的 Readable 连接到 Writable，由于 Readable 的生产效率与 Writable 的消费效率是一样的，所以这里 Transform 内部不存在「背压」问题，背压问题的源头是外部的生产者和消费者速度差造成的
+
+![](./images/transform.png)
