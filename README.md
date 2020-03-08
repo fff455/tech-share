@@ -18,7 +18,6 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [Promise.md](https://github.com/fff455/fe-share/tree/master/JavaScript/Promise.md) 2020-02-24 update.
 * [Stream.md](https://github.com/fff455/fe-share/tree/master/Node/Stream.md) 2020-03-01 update.
 * [Proxy.md](https://github.com/fff455/fe-share/tree/master/JavaScript/Proxy.md) 2020-03-01 update.
 * [Vuex的使用.md](https://github.com/fff455/fe-share/tree/master/Vue/Vuex的使用.md) 2020-03-02 update.
