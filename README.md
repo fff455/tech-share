@@ -18,8 +18,6 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [Stream.md](https://github.com/fff455/fe-share/tree/master/Node/Stream.md) 2020-03-01 update.
-* [Proxy.md](https://github.com/fff455/fe-share/tree/master/JavaScript/Proxy.md) 2020-03-01 update.
-* [Vuex的使用.md](https://github.com/fff455/fe-share/tree/master/Vue/Vuex的使用.md) 2020-03-02 update.
+* [Javascript性能.md](https://github.com/fff455/fe-share/tree/master/JavaScript/Javascript性能.md) 2020-03-09 update.
 <!-- NEW CONTENT-END -->
 
