@@ -81,16 +81,51 @@
 
   如果有安装vue-devtool，可以在其中Vuex的Tab页直接看到state所储存的数据。
 
+* mapState函数
+
+  对于state内数据进行实时的监听和使用，很容易想到计算属性computed，比如
+
+  ```javascript
+  export default {
+    computed: {
+      msg1() {
+        return this.$store.state.msg1;
+      },
+      msg2() {
+        return this.$store.state.msg2;
+      }
+    }
+  }
+  ```
+
+  这样通过计算属性获取与msg同名的state.msg属性，就显得有些冗余了，在参数较少的情况下可能没什么感觉，但在参数多的情况下就会显得非常麻烦，所以我们可以使用mapState函数简化这个过程
+
+  ```javascript
+  import { mapState } from 'vuex';
+  export default {
+    computed: {
+      ...mapState({
+        msg1: state => state.msg1,
+        msg2: state => state.msg2 
+      })
+    }
+  }
+  ```
+
 
 ### **getter** 
 
-> 对state中的数据做统一的处理操作
+> 对state中的数据做统一的处理操作，但并不改变数据本身
 
-* 如果没有getter，我们要对state的数据进行一些操作，可以直接对数据进行
+* 如果没有getter，我们要对state的数据进行一些譬如筛选的操作，可以直接对数据进行
 
   ```javascript
-  msgCut() {
-    this.msg = this.$store.state.substring(0, 5); // "Hello"
+  export default {
+    computed: {
+      frontStr() {
+        return this.$store.state.substring(0, 5); // "Hello"
+      }
+    }
   }
   ```
 
@@ -100,9 +135,7 @@
 
   ```javascript
   const getters = {
-    cutString: state => {
-      state.msg.substring(0, 5);
-    }
+    frontStr: state => state.msg.substring(0, 5);
   }
   export default getters;
   ```
@@ -110,13 +143,91 @@
 * 使用
 
   ```javascript
-  this.msg = this.$store.getters.cutString;
+  this.msg = this.$store.getters.frontStr;
+  ```
+
+  getter更类似于Vue中的计算属性computed，是state经过某种处理后的储存数据。它所返回的结果会被缓存起来，直到它所依赖的状态数据被改变后才会重新调用进行计算，也因而getter并不能改变state的数据本身。
+
+* mapGetter函数
+
+  与mapState一样，mapGetter也是出于对于代码简化的角度所考虑使用的。由于getter本身不对state数据做修改，其处理效果所返回的结果也与state一样会在计算属性中被使用，所以mapGetter的使用效果与mapState极为类似
+
+  ```javascript
+  import { mapGetter } from 'vuex';
+  export default {
+    computed: {
+      ...mapGetter([
+        'frontStr',
+      ])
+    }
+  }
   ```
 
 ### **mutation**
 
+> 通过在mutation内注册方法，可以对state内的数据进行修改
+
+* 数据修改处理就与字面意思一样容易理解了，我们可以在mutation内定义修改方法来操作state的数据。
+
+* 定义
+
+  ```javascript
+  const mutations = {
+    // payload为有效荷载数据，用于储存mutation方法入参
+    addStr: (state, payload) => {
+      state.msg += payload.str1 + payload.str2
+    },
+  }
+  export default mutations;
+  ```
+
+* 使用
+
+  ```javascript
+  export default {
+    methods: {
+      addStr() {
+        this.$store.commit({
+          type: 'addStr',
+          str1: 'a',
+          str2: 'b',
+        })
+      }
+    },
+  }
+  ```
+
+* mapMutations函数
+
+  mutations中同样有简化代码的方法mapMutations，与mapGetters不同之处在于，mutations本身都是修改state数据的方法，所以mapMutations多为在methods属性内使用
+
+  ```html
+  <template>
+    <div>
+      <button @click="addStr({str1:'a',str2:'b'})">add</button>
+    </div>
+  </template>
+  ```
+
+  ```javascript
+  import { mapMutations } from 'vuex';
+  export default {
+    methods: {
+      ...mapMutations([
+        'addStr',
+      ])
+    }
+  }
+  ```
+
+* mutation有一个特别要注意的点是，只能使用同步方法，不可异步操作数据，任何异步操作都不会在mutations内生效。那么为了解决异步操作的问题，action就应运而生了。
 
 ### **action**
+
+> 功能与mutation类似，但用于储存异步方法
+
+* 在mutation中，我们也提到了异步方法需要action来进行处理，而同步方法已在mutation中处理，所以一般我们可以在action中编写异步逻辑，然后调用mutation中的同步方法，通过混用来达到action需要达到的效果。
+
 
 
 ### **module**
