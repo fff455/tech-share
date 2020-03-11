@@ -19,5 +19,6 @@
 <!-- NEW CONTENT-START -->
 ## New Content
 * [Javascript性能.md](https://github.com/fff455/fe-share/tree/master/JavaScript/Javascript性能.md) 2020-03-09 update.
+* [Vuex的使用.md](https://github.com/fff455/fe-share/tree/master/Vue/Vuex的使用.md) 2020-03-11 update.
 <!-- NEW CONTENT-END -->
 
