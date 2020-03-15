@@ -117,3 +117,56 @@ switch-case 语句让代码显得可读性更强，而且 switch-case 语句还�
 1. 当只有两个 case 或者 case 的 value 取值是一段连续的数字的时候，我们可以选择 if-else 语句;
 2. 当有 3~10 个 case 数并且 case 的 value 取值非线性的时候，我们可以选择 switch-case 语句;
 3. 当 case 数达到 10 个以上并且每次的结果只是一个取值而不是额外的 JavaScript 语句的时候，我们可以选择查找表.
+
+## 事件委托
+
+通过事件委托可以减少循环绑定的事件，利用冒泡的原理，把事件加到父级上，触发执行效果。
+
+一个简单的事件委托实现：
+
+```javascript
+document.getElementById("ulId").onclick = function(e) {
+  var e = e || window.event;
+  var target = e.target || e.srcElement; //兼容旧版本IE和现代浏览器
+  if (target.nodeName.toLowerCase() !== "ul") {
+    return;
+  }
+  console.log(target.innerHTML);
+};
+```
+
+这样有两个好处：
+
+1. 提高性能
+2. 新添加的元素还会有之前的事件
+
+### React 中的事件委托
+
+react 在进行 dom 事件绑定时，不是直接绑定事件的，而是通过所谓的合成事件(SyntheticEvent)进行委托管理的，它是原生事件进行封装后的结果，你可以通过 nativeEvent 获取原生事件
+
+react 进行事件识，并不绑定在真实 dom 上，而是通过自己的事件处理器来处理，将所有的事件都绑定在 document 上，这样真实点击的时候，冒泡到 document 上，react 再通过 document 去 dispatchEvent 统一处理事件
+
+大体上有这两点：
+
+1. 事件管理中心(bankForRegistrationName)会在 react-render 过程中保存所有所有 dom 事件
+2. document 作为事件委托者，用来分发事件(dispatchEvent),通过 dom 节点唯一标识(\_debugID)去事件管理(bankForRegistrationName)触发事件
+
+### Vue
+
+Vue 中源码貌似没有做事件委托的处理，详情可见[Is event delegation necessary?](https://forum.vuejs.org/t/is-event-delegation-necessary/3701)
+
+## 重排/重绘
+
+浏览器下载完 HTMl，CSS，JS 后会生成两棵树：DOM 树和渲染树。 当 Dom 的几何属性发生变化时，比如 Dom 的宽高，或者颜色，position，浏览器需要重新计算元素的几何属性，并且重新构建渲染树，这个过程称之为重绘重排。
+
+元素布局的改变或内容的增删改或者浏览器窗口尺寸改变都将会导致重排，而字体颜色或者背景色的修改则将导致重绘。
+
+重排/重绘上有这样几种处理方法：
+
+1. Dom 先隐藏，操作后再显示 2 次重排
+2. document.createDocumentFragment() 创建文档片段处理，操作后追加到页面 1 次重排;
+3. var newDOM = oldDOM.cloneNode(true)创建 Dom 副本，修改副本后 oldDOM.parentNode.replaceChild
+4. (newDOM,oldDOM)覆盖原 DOM 2 次重排
+5. 如果是动画元素的话，最好使用绝对定位以让它不在文档流中，这样的话改变它的位置不会引起页面其它元素重排
+
+[天生就慢的 DOM 如何优化？](https://segmentfault.com/a/1190000008267184)
