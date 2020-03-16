@@ -228,6 +228,150 @@
 
 * 在mutation中，我们也提到了异步方法需要action来进行处理，而同步方法已在mutation中处理，所以一般我们可以在action中编写异步逻辑，然后调用mutation中的同步方法，通过混用来达到action需要达到的效果。
 
+* 定义
 
+  ```javascript
+  const actions = {
+    addStrAsync(context, Object) {
+      setTimeout(() => {
+        context.commit({
+          type: 'addStr',
+          str1: Object.str1,
+          str2: Object.str2
+        })
+      }, 1000)
+    }
+  }
+  export default actions;
+  ```
+
+* 使用
+
+  ```javascript
+  this.$store.dispatch('addStrAsync', {str1: 'c', str2: 'd'})
+  ```
+
+* 总体来说就是以 action -> mutation -> state 的形式进行调用。但由于满足异步处理，所以Promise与async/await自然也是可以在这里进行使用的，dispatch方法可以返回一个Promise类型来处理异步。
+
+* 返回Promise的action
+
+  ```javascript
+  //定义
+  const actions = {
+    action1(context) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          context.commit('mutation1');
+          resolve()
+        }, 1000)
+      })
+    },
+  }
+
+  //使用
+  this.$store.dispatch('action1').then(() => {
+    this.$store.commit('mutation2');
+  })
+  ```
+
+  当然也可以这样写
+
+  ```javascript
+  //定义
+  const action = {
+    // action1 ...
+    action2({ dispatch, commit }) { //解构一下context
+      return dispatch('action1').then(() => {
+        commit('mutation1');
+      })
+    }
+  }
+
+  //使用
+  this.$store.dispatch('action2');
+  ```
+
+* 使用async/await组合多个action
+
+  ```javascript
+  //定义
+  const actions = {
+    async action1({ commit }) {
+      setTimeout(() => {
+        commit('mutation1');
+      }, 1000)
+    },
+    async action2({ dispatch, commit }) {
+      await dispatch('action1')
+      commit('mutation2')
+    }
+  }
+
+  //使用
+  this.$store.dispatch('action2')
+  ```
+
+* mapActions的使用方法与mapMutation类似，就不再具体写示例。
 
 ### **module**
+
+> 可使vuex根据业务需要分割成多个子系统模块，分别来进行维护。当然子模块也可以继续套更小的模块，层层嵌套可以构成一棵由模块构成的状态树。
+
+* 使用
+
+  ```javascript
+  const moduleA = {
+    state: { ... },
+    mutations: { ... },
+    actions: { ... },
+    getters: { ... }
+  }
+
+  const moduleB = {
+    state: { ... },
+    mutations: { ... },
+    actions: { ... }
+  }
+
+  const store = new Vuex.Store({
+    modules: {
+      a: moduleA,
+      b: moduleB
+    }
+  })
+
+  store.state.a // -> moduleA 的状态
+  store.state.b // -> moduleB 的状态
+  ```
+
+* 对于单一模块来说，getter，mutation等的state参数都指向当前模块的state，action则通过conext.state获得
+
+  ```javascript
+  const moduleA = {
+    state: { count: 0 },
+    mutations: {
+      increment (state) {
+        // 这里的 `state` 对象是模块的局部状态
+        state.count++
+      }
+    },
+
+    getters: {
+      sumWithRootCount (state, getters, rootState) {
+        //rootState为根节点状态，它包含根节点的状态和所有子模块的状态，相当于返回了整个模块树
+        return state.count + rootState.count
+      }
+    },
+
+    actions: {
+      incrementIfOddOnRootSum ({ state, commit, rootState }) {
+        if ((state.count + rootState.count) % 2 === 1) {
+          commit('increment')
+        }
+      }
+    }
+  }
+  ``
+
+* 命名空间
+
