@@ -358,6 +358,7 @@
 
     getters: {
       sumWithRootCount (state, getters, rootState) {
+        //getters为当前模块所属命名空间的getters，commit、dispatch同理。命名空间将在下文详细介绍
         //rootState为根节点状态，它包含根节点的状态和所有子模块的状态，相当于返回了整个模块树
         return state.count + rootState.count
       }
@@ -375,3 +376,149 @@
 
 * 命名空间
 
+  默认情况下，模块内部的 action、mutation 和 getter 是注册在全局命名空间的——这样使得多个模块能够对同一 mutation 或 action 作出响应。
+  
+  也就是说，假设现有两个模块 moduleA 和 moduleB，两者有一个重名的 mutation 记为 mutation1，那么当我们使用这个 mutation 时，moduleA 和 moduleB 的对应 state 都回发生改变，这也就是所谓的在全局命名空间下，mutation被注册的含义。当然 action 同理。
+
+  如果通过改变某个模块下命名空间的属性 namespaced 为 true 的方式使其成为带命名空间的模块。模块对应的getter、mutation、action 也会对应注册至该命名空间下。
+
+   ★ **state需要与这些相区别，state作为入参时，不论是否启用命名空间，都为当前模块的state**
+
+  我们来看官方给的一个例子
+
+  ```javascript
+  const store = new Vuex.Store({
+    modules: {
+      account: {
+        namespaced: true,
+
+        // 模块内容（module assets）
+        state: { ... }, // 模块内的状态已经是嵌套的了，使用 `namespaced` 属性不会对其产生影响
+        getters: {
+          isAdmin () { ... } // -> getters['account/isAdmin']
+        },
+        actions: {
+          login () { ... } // -> dispatch('account/login')
+        },
+        mutations: {
+          login () { ... } // -> commit('account/login')
+        },
+
+        // 嵌套模块
+        modules: {
+          // 继承父模块的命名空间
+          myPage: {
+            getters: {
+              profile () { ... } // -> getters['account/profile']
+            }
+          },
+
+          // 进一步嵌套命名空间
+          posts: {
+            namespaced: true,
+            getters: {
+              popular () { ... } // -> getters['account/posts/popular']
+            }
+          }
+        }
+      }
+    }
+  })
+  ```
+
+  将模块想象成一棵模块树，根节点为全局命名空间，每个模块就是一个子节点，如果当前节点没有命名空间，那么它所属的命名空间就从当前节点的父辈节点往上找。
+
+  启用了命名空间的 getter 和 action 会收到局部化的 getter，dispatch 和 commit。也就是说，你在使用模块内容（module assets）时，不会再因为入参的getters是注册在全局空间下，而需要在同一模块内额外添加空间名前缀。
+
+* 局部命名空间访问全局内容（Global Asset）
+
+  如果你希望使用全局 state 和 getter，rootState 和 rootGetters 会作为第三和第四参数传入 getter，也会通过 context 对象的属性传入 action。
+
+  ```javascript
+  //启用命名空间的getter
+  getters: {
+    someGetter (state, getters, rootState, rootGetters) {
+      getters.someOtherGetter // -> 'foo/someOtherGetter'
+      rootGetters.someOtherGetter // -> 'someOtherGetter'
+    },
+    someOtherGetter: state => { ... }
+  },
+  ```
+
+  若需要在全局命名空间内分发 action 或提交 mutation，将 { root: true } 作为第三参数传给 dispatch 或 commit 即可。
+
+  ```javascript
+  //启用命名空间的action
+  actions: {
+    someAction ({ dispatch, commit, getters, rootGetters }) {
+      getters.someGetter // -> 'foo/someGetter'
+      rootGetters.someGetter // -> 'someGetter'
+
+      dispatch('someOtherAction') // -> 'foo/someOtherAction'
+      dispatch('someOtherAction', null, { root: true }) // -> 'someOtherAction'
+
+      commit('someMutation') // -> 'foo/someMutation'
+      commit('someMutation', null, { root: true }) // -> 'someMutation'
+    },
+    someOtherAction (context, payload) { ... }
+  }
+  ```
+
+* 在局部命名空间注册全局action
+
+  若需要在带命名空间的模块注册全局 action，则可添加 root: true，并将这个 action 的定义放在函数 handler 中，类似深度监听Object的写法。
+
+  ```javascript
+  actions: {
+    someAction: {
+      root: true,
+      handler (namespacedContext, payload) { ... } // -> 'someAction'
+    }
+  }
+  ```
+
+* 带命名空间使用绑定方法
+
+  带命名空间使用mapState、mapActions等方法时，难免会碰到前缀过长，或是命名空间路径比较长的情况，我们可以将部分命名空间提出为第一个参数来进行使用。
+
+  ```javascript
+  computed: {
+    ...mapState('some/nested/module', {
+      a: state => state.a,
+      b: state => state.b
+    })
+  },
+  methods: {
+    ...mapActions('some/nested/module', [
+      'foo', // -> this.foo()
+      'bar' // -> this.bar()
+    ])
+  }
+  ```
+
+  也可以通过 createNamespacedHelpers 辅助，让绑定方法更加简单，这对实际编写系统来说，用处也是极大的。
+
+  ```javascript
+  import { createNamespacedHelpers } from 'vuex'
+  const { mapState, mapActions } = createNamespacedHelpers('some/nested/module')
+  export default {
+    computed: {
+      // 在 `some/nested/module` 中查找
+      ...mapState({
+        a: state => state.a,
+        b: state => state.b
+      })
+    },
+    methods: {
+      // 在 `some/nested/module` 中查找
+      ...mapActions([
+        'foo',
+        'bar'
+      ])
+    }
+  }
+  ```
+
+### 结语
+
+Vuex可以说是Vue中相当重要的一块内容。对于兄弟组件之间的传值，系统的一些全局状态控制都有很大的帮助。本文通过参考官方文档以及通过demo对Vuex的使用，对Vuex大部分的内容进行了介绍。简单运用的话很快就能上手，但如果想要更熟练的运用，以及把Vuex设计的与整个工程更加匹配，需要更深入的学习，以及更多的开发经验。
