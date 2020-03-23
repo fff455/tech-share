@@ -19,5 +19,6 @@
 <!-- NEW CONTENT-START -->
 ## New Content
 * [Vuex的使用.md](https://github.com/fff455/fe-share/tree/master/Vue/Vuex的使用.md) 2020-03-22 update.
+* [前端架构.md](https://github.com/fff455/fe-share/tree/master/Engineering/前端架构.md) 2020-03-23 update.
 <!-- NEW CONTENT-END -->
 
