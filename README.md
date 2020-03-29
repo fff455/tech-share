@@ -19,8 +19,9 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [前端架构.md](https://github.com/fff455/fe-share/tree/master/Engineering/前端架构.md) 2020-03-23 update.
 * [Vuex的使用.md](https://github.com/fff455/fe-share/tree/master/Vue/Vuex的使用.md) 2020-03-24 update.
+* [前端架构.md](https://github.com/fff455/fe-share/tree/master/Engineering/前端架构.md) 2020-03-29 update.
+* [缓存.md](https://github.com/fff455/fe-share/tree/master/Engineering/缓存.md) 2020-03-29 update.
 <!-- NEW CONTENT-END -->
 
 > 更多内容或者加入我们，欢迎关注我们的公众号  
