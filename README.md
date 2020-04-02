@@ -20,7 +20,6 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [Vuex的使用.md](https://github.com/fff455/fe-share/tree/master/Vue/Vuex的使用.md) 2020-03-24 update.
 * [前端架构.md](https://github.com/fff455/fe-share/tree/master/Engineering/前端架构.md) 2020-03-29 update.
 * [缓存.md](https://github.com/fff455/fe-share/tree/master/Engineering/缓存.md) 2020-03-29 update.
 * [ES6解构赋值.md](https://github.com/fff455/fe-share/tree/master/JavaScript/ES6解构赋值.md) 2020-03-30 update.
