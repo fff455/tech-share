@@ -21,8 +21,6 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [ES6解构赋值.md](https://github.com/fff455/fe-share/tree/master/JavaScript/ES6解构赋值.md) 2020-03-30 update.
-* [PyTorch安装和基本操作.md](https://github.com/fff455/fe-share/tree/master/MachineLearning/PyTorch安装和基本操作.md) 2020-03-30 update.
 * [SceneKit.md](https://github.com/fff455/fe-share/tree/master/AR/SceneKit.md) 2020-04-05 update.
 <!-- NEW CONTENT-END -->
 
