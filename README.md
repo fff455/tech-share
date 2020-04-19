@@ -22,7 +22,6 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [虚拟对抗训练.md](https://github.com/fff455/fe-share/tree/master/MachineLearning/虚拟对抗训练.md) 2020-04-07 update.
 * [什么是BFC.md](https://github.com/fff455/fe-share/tree/master/CSS/什么是BFC.md) 2020-04-12 update.
 * [机器学习常见评价指标.md](https://github.com/fff455/fe-share/tree/master/MachineLearning/机器学习常见评价指标.md) 2020-04-13 update.
 * [gulp.md](https://github.com/fff455/fe-share/tree/master/Engineering/gulp.md) 2020-04-13 update.
