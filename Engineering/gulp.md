@@ -131,6 +131,60 @@ gulp任务又被分为公开任务与私有任务：
   exports.task = series(task1, parallel(task2, task3));
   ```
 
+## 文件处理
+
+gulp的一个功能就是对静态的文件资源进行处理，比较常见的就是预处理sass和less，将其编译成css文件。
+
+gulp官网介绍的API并不多，其中最重要的三个方法即是src()，dest()和pipe()。上文中也有提到，gulp通过流(node stream)的形式来对文件进行配置和输出以提高工作效率。而其提供的这三个方法就是典型的对流进行处理的方法。
+
+* src() : 接受 glob 参数，并从文件系统中读取文件然后**生成**一个Node流。它将所有匹配的文件读取到内存中并通过流（stream）进行处理。
+
+* pipe() : pipeline的缩写，功能如其名，像管道一样用于连接转换流(transform streams)或可写流(writable streams)，说的通俗一点就是起到了一个对流进行控制和处理的作用。
+
+* dest() : destination的缩写，流的终点，接受输出目录的参数，并产生一个终止流，用于控制流的出口。
+
+看一个官网提供的使用这三个方法的一个样例，src方法将所有/src目录下的js文件转为流的形式交给gulp进行处理，当然样例并没有进行处理，直接通过dest规定了输出文件的出口路径。
+
+```javascript
+exports.default = function() {
+  return src('src/*.js')
+    .pipe(dest('output/'));
+}
+```
+
 ## gulp插件
 
+gulp的插件相当丰富，而且大多数插件的使用都很方便，它们都配有详细的文档，而且调用方法也相同（通过传递文件对象流给它），它们通常会对这些文件进行修改，最后返回新的文件给下一个插件。
+
+托管在npm上的插件，若标记有gulpplugin，那就是gulp插件，而gulpfriendly标记的依赖并不是gulp插件，但可以在gulp中进行使用。
+
+再来看一个官网的使用插件的样例，在gulpfile中对插件进行引入，并直接进行使用，插件方法返回的内容传递了文件对象流给pipe方法。下面的例子进行的处理，就是对js代码进行了压缩，并把输出的文件重命名为.min.js的后缀名。
+
+```javascript
+const { src, dest } = require('gulp');
+const uglify = require('gulp-uglify');
+const rename = require('gulp-rename');
+
+exports.default = function() {
+  return src('src/*.js')
+    .pipe(uglify())
+    .pipe(rename({ extname: '.min.js' }))
+    .pipe(dest('output/'));
+}
+```
+
 ## sass预处理
+
+sass或者less对于开发来说，通过其更友好的语法，对比css有明显的优势。sass预处理对于一个前端项目来说，是比较基础但也是重要的处理。其实说完了插件，对于sass文件的预处理的方法也是比较明了了，仅仅就是使用sass提供的gulp插件。
+
+```javascript
+var gulp = require('gulp');
+var sass = require('gulp-sass');
+exports.default = function() {
+  return gulp.src('app/scss/index.scss')
+    .pipe(sass())
+    .pipe(gulp.dest('app/css'))
+}
+```
+
+如果运用的再复杂一些，对sass的预处理还可以用于对界面颜色皮肤的统一管理，将不同颜色的风格的样式分开进行打包处理，方便直接进行切换。
