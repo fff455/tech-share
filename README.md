@@ -23,8 +23,6 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [Flutter介绍.md](https://github.com/fff455/fe-share/tree/master/跨端/Flutter介绍.md) 2020-04-19 update.
-* [gulp.md](https://github.com/fff455/fe-share/tree/master/Engineering/gulp.md) 2020-04-19 update.
 * [原型网络.md](https://github.com/fff455/fe-share/tree/master/MachineLearning/原型网络.md) 2020-04-20 update.
 <!-- NEW CONTENT-END -->
 
