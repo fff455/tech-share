@@ -186,3 +186,229 @@ webpack对png或jpg格式图片进行处理，形式与前两个相同。
   ```
 
 从配置文件的内容来看，通过url-loader为html注入一个img的标签，来使图片正确显示。
+
+### demo6 CSS Module
+
+![demo6](./image/demo6.png)
+
+先来看demo6的目录，根据前几个样例，我们很明显就能知道webpack需要用css-loader和style-loader来打包css文件，用babel-loader来打包jsx文件。
+
+那么webpack配置基本内容确定之后再来看代码内容，
+
+```css
+/* app.css */
+.h1 {
+  color:red;
+}
+
+:global(.h2) {
+  color: blue;
+}
+```
+
+```jsx
+/* main.jsx */
+var React = require('react');
+var ReactDOM = require('react-dom');
+var style = require('./app.css');
+
+ReactDOM.render(
+  <div>
+    <h1 className={style.h1}>Hello World</h1>
+    <h2 className="h2">Hello Webpack</h2>
+  </div>,
+  document.getElementById('example')
+);
+```
+
+比较特殊的点在于css有一个global，而jsx文件内引入了css文件，并将style.h1赋值给了一个元素，再来看一下运行效果。
+
+![demo6效果](./image/demo6效果图.png)
+
+* html文件中类名为h1的元素并没有生效.h1的样式，jsx的render中类名为style.h1的元素却生效了.h1的样式。且类名不再为h1，webpack将类名编译为一串哈希字符串，该样例中就只在jsx文件内局部被引入并生效。
+
+* .h2的样式由于增加了global申明，就未被webpack转为局部样式，也不会被转哈希值后引入，正常生效于所有对应元素。
+
+可以试着打印一下jsx中引入的style的内容，可以发现只有h1被转译。
+
+```json
+{
+  h1: "_1yZB3Q5Xe45RPofl-yJAo3"
+}
+```
+
+最后再来看一下配置文件的特殊点，可以发现css-loader中增加了modules为true的配置，也就是使css模块化生效，将样式模块化打包，可以有效控制项目样式生效的范围，防止一些全局的样式污染。
+
+```javascript
+// webpack.config.js
+module.exports = {
+  //...
+  module: {
+    rules: [
+      //...
+      {
+        test: /\.css$/,
+        use: [
+          // ...
+          {
+             loader: 'css-loader',
+             options: {
+               modules: true
+             }
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### demo7 UglifyJs Plugin
+
+直接来看webpack配置文件
+
+```javascript
+// webpack.config.js
+var webpack = require('webpack');
+var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+
+module.exports = {
+  entry: './main.js',
+  output: {
+    filename: 'bundle.js'
+  },
+  plugins: [
+    new UglifyJsPlugin()
+  ]
+};
+```
+
+相较于上面的样例，增加了一个名为plugins的配置，plugins(插件)可以说是webpack最重要的配置之一，插件的自由度很高，也可以自己编写。本样例中所使用的是官方提供的一个用于压缩js代码的插件。
+
+运行代码后我们可以发现，main.js的代码会被压缩，该例子中为最基本的参数名长度的压缩
+
+```javascript
+// main.js 压缩前
+var longVariableName = 'Hello';
+longVariableName += ' World';
+document.write('<h1>' + longVariableName + '</h1>');
+
+// main.js 压缩后
+var r = "Hello";
+r += " World",
+document.write("<h1>" + r + "</h1>")
+```
+
+### demo8 HTML Webpack Plugin and Open Browser Webpack Plugin
+
+同样是讲插件配置的样例，直接来看配置文件。
+
+```javascript
+var HtmlwebpackPlugin = require('html-webpack-plugin');
+var OpenBrowserPlugin = require('open-browser-webpack-plugin');
+
+module.exports = {
+  entry: './main.js',
+  output: {
+    filename: 'bundle.js'
+  },
+  plugins: [
+    new HtmlwebpackPlugin({
+      title: 'Webpack-demos',
+      filename: 'index.html'
+    }),
+    new OpenBrowserPlugin({
+      url: 'http://localhost:8080'
+    })
+  ]
+};
+```
+
+整体来说这个样例难度不大，插件都有自己支持的api，可以在插件的文档中找到各自的含义。
+
+* HtmlwebpackPlugin: 自动生成index.html文件，或者说自动生成入口的html文件。
+
+* OpenBrowserPlugin: 本地运行项目代码时，能够自动打开浏览器，且规定了本地运行的地址与端口。
+
+### demo9 Environment flags
+
+webpack可以用于传递全局变量，如区分开发环境与生产环境，来看webpack的配置文件
+
+```javascript
+// webpack.config.js
+var webpack = require('webpack');
+
+var devFlagPlugin = new webpack.DefinePlugin({
+  __DEV__: JSON.stringify(JSON.parse(process.env.DEBUG || 'false'))
+});
+
+module.exports = {
+  entry: './main.js',
+  output: {
+    filename: 'bundle.js'
+  },
+  plugins: [devFlagPlugin]
+};
+```
+
+```json
+// package.json
+// ...
+"scripts": {
+  "dev": "npx cross-env DEBUG=true webpack-dev-server --open",
+  "build": "npx cross-env DEBUG=false webpack"
+},
+```
+
+使用webpack.DefinePlugin传递全局参数，如规定开发环境的标志，那么使用该插件之后，就可以在开发环境中生效这个参数，如下面代码中，只有在开发环境中才能看到时间。
+
+```javascript
+// main.js
+document.write('<h1>Hello World</h1>');
+
+if (__DEV__) {
+  document.write(new Date());
+}
+```
+
+### demo10 Code splitting
+
+> 在前端页面进行加载的时候，有时并不需要一次性把所有的代码都加载完成，比如一些非首次课件的元素，像弹窗，或者标签页等。按需加载是webpack提供的一个非常重要的功能，做好代码分割，可以有效提升前端页面的加载效率与优化用户体验。
+
+来看一下demo10的文件目录
+
+![demo10](./image/demo10.png)
+
+```javascript
+// webapck.config.js
+module.exports = {
+  entry: './main.js',
+  output: {
+    filename: 'bundle.js'
+  }
+};
+```
+
+可以发现有两个js入口文件，但在webpack的配置中，并没有像demo2一样设立了两个入口
+
+```javascript
+// main.js
+require.ensure(['./a'], function(require) {
+  var content = require('./a');
+  document.open();
+  document.write('<h1>' + content + '</h1>');
+  document.close();
+});
+```
+
+那么在看main.js的代码，使用require.ensure引入了a.js，所以没有两个入口是正常的。但打包生成的代码却有bundle.js和0.bundle.js两份。这就是webpack进行了代码分割处理。通过这种方法引入的代码，在打包后会被分割，并且在需要时进行加载。
+
+![demo10效果图](./image/demo10效果图.png)
+
+当然在这个样例中并不能看到明显的按需加载效果，在界面打开时这两份文件都有打包需求，所以都进行了加载。
+
+在vue中，通过import也可以实现代码分割与按需加载，在router中引入可以实现页面的按需加载，而在vue文件的组件(components)中引入则可以实现组件的按需加载，引入方式如下。
+
+```javascript
+const index = () => import(/* webpackChunkName: "index" */ './index.vue');
+```
