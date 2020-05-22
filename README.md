@@ -10,6 +10,7 @@
 * [JavaScript](https://github.com/fff455/fe-share/tree/master/JavaScript)
 * [MachineLearning](https://github.com/fff455/fe-share/tree/master/MachineLearning)
 * [Node](https://github.com/fff455/fe-share/tree/master/Node)
+* [React](https://github.com/fff455/fe-share/tree/master/React)
 * [Vue](https://github.com/fff455/fe-share/tree/master/Vue)
 * [跨端](https://github.com/fff455/fe-share/tree/master/跨端)
 <!-- RECORD-END -->
@@ -23,10 +24,8 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [Self-attention推荐算法.md](https://github.com/fff455/fe-share/tree/master/MachineLearning/Self-attention推荐算法.md) 2020-05-11 update.
-* [Transformer算法.md](https://github.com/fff455/fe-share/tree/master/MachineLearning/Transformer算法.md) 2020-05-11 update.
-* [前端架构.md](https://github.com/fff455/fe-share/tree/master/Engineering/前端架构.md) 2020-05-11 update.
 * [webpack.md](https://github.com/fff455/fe-share/tree/master/Engineering/webpack.md) 2020-05-18 update.
+* [SWR.md](https://github.com/fff455/fe-share/tree/master/React/SWR.md) 2020-05-22 update.
 <!-- NEW CONTENT-END -->
 
 > 更多内容或者加入我们，欢迎关注我们的公众号  
