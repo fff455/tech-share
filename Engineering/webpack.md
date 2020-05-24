@@ -412,3 +412,166 @@ require.ensure(['./a'], function(require) {
 ```javascript
 const index = () => import(/* webpackChunkName: "index" */ './index.vue');
 ```
+
+### demo11 code splitting with bundle-loader
+
+所表述的功能与demo10相同，唯一的区别就在于main.js中对a.js的引入方式
+
+```javascript
+var load = require('bundle-loader!./a.js');
+
+load(function(file) {
+  document.open();
+  document.write('<h1>' + file + '</h1>');
+  document.close();
+});
+```
+
+以该种方式引入后，来进行相应chunk的加载，该方法会返回一个function，且入参为一个回调方法
+
+```javascript
+// 在require bundle时，浏览器会加载它
+var waitForChunk = require("bundle!./file.js");
+
+// 等待加载，在回调中使用
+waitForChunk(function(file) {
+  // 这里可以使用file，就像是用下面的代码require进来一样
+  // var file = require("./file.js");
+});
+```
+
+但是这样引入其实并非是按需加载，如果需要实现按需加载，需要以以下方式引入
+
+```javascript
+var load = require("bundle?lazy!./file.js");
+
+// 只有在调用load的时候才会真正加载
+load(function(file) {
+
+});
+```
+
+### demo12 Common chunk
+
+先来看文件结构与部分文件内容
+
+![demo12](./image/demo12.png)
+
+```javascript
+// main1.jsx
+var React = require('react');
+var ReactDOM = require('react-dom');
+ReactDOM.render(
+  <h1>Hello World</h1>,
+  document.getElementById('a')
+);
+```
+
+main2.jsx与1类似，无非就是选中了另一个元素，更改了h1标签的内容。
+
+对于main1与main2这两个模块的代码，都同时引入了react与react-dom两个模块，可以说是两个文件公共模块，但在webpack打包的时候，会将公共模块分别打包进两个bundle里。
+
+![demo12非common](./image/demo12非common.png)
+
+由于公共部分的重复存在，所以对于加载来说是一种很大的浪费，这就是这个demo所要介绍的CommonsChunkPlugin插件所解决的问题。
+
+```javascript
+// webpack.config.js
+var webpack = require('webpack');
+module.exports = {
+  // ...
+  plugins: [
+    new webpack.optimize.CommonsChunkPlugin({
+      name: "commons",
+      // (the commons chunk name)
+
+      filename: "commons.js",
+      // (the filename of the commons chunk)
+    })
+  ]
+}
+```
+
+在webpack配置中引入该组件，来提出公共模块的代码形成一个新的chunk，来减少重复的代码模块反复加载。引入后，可以看到bundle1和bundle2代码量显著减少，react与react-dom模块都在common.js内被引入。
+
+![demo12common](./image/demo12common.png)
+
+### demo13 Vendor chunk
+
+延续demo12，如果在暂未有公共代码模块的情况下，想将一些潜在的公共代码提出，则就可以在webpack入口(entry)中加入vendor，一般这些公共代码为第三方库，如demo12的react，以及本例中的jquery。
+
+来看webpack配置
+
+```javascript
+var webpack = require('webpack');
+
+module.exports = {
+  entry: {
+    app: './main.js',
+    vendor: ['jquery'],
+  },
+  output: {
+    filename: 'bundle.js'
+  },
+  plugins: [
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      filename: 'vendor.js'
+    })
+  ]
+};
+```
+
+在入口处增加了一个vendor，并写明jquery，配合CommonChunkPlugin意为打包后的vendor.js即为jquery的代码模块。
+
+在[webpack-demos](https://github.com/ruanyf/webpack-demos)的readme中，还可以看到对本例的一些在代码中没有的补充。比如对于本例中的jquery，我们需要在单个js内进行引入。
+
+```javascript
+// main.js
+var $ = require('jquery');
+$('h1').text('Hello World');
+```
+
+使用ProvidePlugin插件，即可全局挂载这些第三方库，不必再在单个文件内分别进行引入。
+
+```javascript
+// webpack.config.js
+var webpack = require('webpack');
+module.exports = {
+  // ...
+  plugins: [
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery'
+    })
+  ]
+};
+```
+
+### demo14 Exposing global variables
+
+说完模块的全局挂载，再来说一说webpack对全局变量的挂载，相比模块的挂载，就简单很多了，webpack提供的external属性可以直接用于全局变量的挂载。
+
+```javascript
+module.exports = {
+  // ...
+  externals: {
+    // require('data') is external and available
+    //  on the global var data
+    'data': 'data'
+  }
+};
+```
+
+```javascript
+// data.js
+var data = 'Hello World';
+```
+
+### demo15 React Router
+
+本例为一个webpack + React-router的简单demo，无过多可介绍的内容，建议直接看代码。
+
+### webpack-demos学习总结
+
+15个demo提供了webpack重要属性的功能，介绍了常用且重要的webpack插件，以及css，image，jsx等格式文件的打包方式。对于初学webpack的人来说可以说是相当友好了。
