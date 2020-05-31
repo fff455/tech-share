@@ -24,11 +24,10 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [SWR.md](https://github.com/fff455/fe-share/tree/master/React/SWR.md) 2020-05-22 update.
-* [RNN循环神经网络.md](https://github.com/fff455/fe-share/tree/master/MachineLearning/RNN循环神经网络.md) 2020-05-22 update.
-* [虚拟对抗训练.md](https://github.com/fff455/fe-share/tree/master/MachineLearning/虚拟对抗训练.md) 2020-05-22 update.
 * [webpack.md](https://github.com/fff455/fe-share/tree/master/Engineering/webpack.md) 2020-05-27 update.
 * [CNN卷积神经网络.md](https://github.com/fff455/fe-share/tree/master/MachineLearning/CNN卷积神经网络.md) 2020-05-27 update.
+* [Docker.md](https://github.com/fff455/fe-share/tree/master/Engineering/Docker.md) 2020-05-31 update.
+* [技术架构演化.md](https://github.com/fff455/fe-share/tree/master/Engineering/技术架构演化.md) 2020-05-31 update.
 <!-- NEW CONTENT-END -->
 
 > 更多内容或者加入我们，欢迎关注我们的公众号  
