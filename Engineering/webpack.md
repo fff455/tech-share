@@ -575,3 +575,113 @@ var data = 'Hello World';
 ### webpack-demos学习总结
 
 15个demo提供了webpack重要属性的功能，介绍了常用且重要的webpack插件，以及css，image，jsx等格式文件的打包方式。对于初学webpack的人来说可以说是相当友好了。
+
+
+## Tree-shaking
+
+### 什么是Tree-shaking
+
+Tree-shaking在webpack中是一种功能的术语，指用于剔除Javascript中未被引用的代码(dead code)。从名字上来看可以说十分形象了，相当于要一棵树，把树上的枯叶（未被引用的代码）摇下来，那么被摇剩下的树叶必然是健康有用的。Tree-shaking也是webpack优化js代码这一功能的重要部分之一。
+
+首先要明确一点，使用Tree-shaking的前提是使用ES6模块系统，如import和export，而不支持CommonJS。
+
+这就不得不简单提一提CommonJS和ES6模块的区别了
+
+* CommonJS： 运行时进行动态加载，通过上文的demo10和demo11也可以看到，其实现按需加载的便利性。另外，由于CommonJS所导出的内容都可以视作一个对象，所以其加载的时候都会加载整个模块，或者说会将所有的接口都加载进来。关于CommonJS，可以详见[Node模块系统](https://xiaobaihaha0001.gitbook.io/fe-share/node/node-mo-kuai-xi-tong)的介绍。
+
+* ES6 Module： ES6模块的加载就更偏向于静态一些，在编译的时候就会进行引入，而非运行的时候。从命名的角度就更好理解一点，CommonJS使用require进行引入，有一种在需要的时候才会加载的含义。而import则更偏向于在一开始就向组件一样，一块块安装好，然后再进行运行。另外，ES6模块可以有多个export，所以在引入的时候也可以单独引入其中的一个或多个接口。
+
+借鉴于这个区别，所以Tree-shaking依赖ES6模块实现成为了可能，它不仅能够实现按需加载优化用户体验，同时也通过不加载无用代码而使前端系统的包体得到了减小。
+
+### 如何使用Tree-shaking
+
+来举一个比较简单的Tree-shaking的例子，现在有一个模块代码如下：
+
+```javascript
+// mathUtil.js
+export function square(x) {
+  alert(x * x);
+}
+
+export function cube(x) {
+  alert(x * x * x);
+}
+```
+
+在另一个js文件中进行引入：
+```javascript
+//main.js
+import { square } from './a.js'
+square(2);
+```
+
+然后用webpack打包运行后，我们可以在bundle.js的最后部分找到以下代码内容：
+
+```javascript
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = square;
+/* unused harmony export cube */
+function square(x) {
+  alert(x * x);
+}
+
+function cube(x) {
+  alert(x * x * x);
+}
+```
+
+可以发现cube方法一样被加载了，这就是没有使用Tree-shaking时候的效果。那么现在有两种方法可以达到这一效果。
+
+* 更换运行或者打包命令
+
+  ```shell
+  webpack --optimize-minimize
+  ```
+
+  再次运行时，发现bundle.js的内容已经发生改变，也可以发现cube方法并没有加载，而只有square
+
+  ```javascript
+  function(e,t,r){"use strict";function n(e){alert(e*e)}t.a=n}]);
+  ```
+
+* 使用上文demo7中提到的插件UglifyJsPlugin，来实现Tree-shaking。这也可以从一个侧面反应出这个插件优化的js代码的一些方法。
+
+  ```javascript
+  var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+  module.exports = {
+    entry: './main.js',
+    output: {
+      filename: 'bundle.js'
+    },
+    plugins: [
+      new UglifyJsPlugin()
+    ]
+  };
+  ```
+  
+  完成打包后可以发现，bundle.js内容与方法一并没有什么差别，这也反应了方法一通过命令优化的方法其实就是基于本方法的插件的。
+
+### 额外注意点
+
+* 另外在进行Tree-shaking时，需要注意代码中是否含有副作用的代码。如果没有副作用，可以在package.json中配置sideEffects为false来表示所有代码都不含有副作用。
+
+  ```json
+  {
+    "name": "your-project",
+    "sideEffects": false
+  }
+  ```
+
+* 副作用的定义是，在导入时会执行特殊行为的代码，而不是仅仅暴露一个export或多个export。举例说明，例如polyfill，它影响全局作用域，并且通常不提供export。
+  
+* 那么所谓的无副作用即代码都可以放心进行Tree-shaking。如果确实有一部分代码存在副作用，那也可以将文件所在目录以数组元素的形式加入至sideEffects的属性当中。
+
+### 总结
+
+要学会使用Tree-shaking，需要做到以下三点
+
+1. 使用 ES2015 模块语法（即 import 和 export）。
+
+2. 在项目 package.json 文件中，添加一个 "sideEffects" 入口。
+
+3. 引入一个能够删除未引用代码(dead code)的压缩工具(minifier)（例如 UglifyJSPlugin）。
