@@ -41,7 +41,7 @@ console.timeEnd("for reverse");
 //forEach测试
 console.time("forEach");
 var sum = 0;
-arr.forEach(function(ele) {
+arr.forEach(function (ele) {
   sum += ele;
 });
 console.timeEnd("forEach");
@@ -125,7 +125,7 @@ switch-case 语句让代码显得可读性更强，而且 switch-case 语句还�
 一个简单的事件委托实现：
 
 ```javascript
-document.getElementById("ulId").onclick = function(e) {
+document.getElementById("ulId").onclick = function (e) {
   var e = e || window.event;
   var target = e.target || e.srcElement; //兼容旧版本IE和现代浏览器
   if (target.nodeName.toLowerCase() !== "ul") {

@@ -35,7 +35,7 @@ const timeUnique = "test timer";
 console.time(timeUnique);
 Array(1000)
   .fill(0)
-  .map(e => e + 1);
+  .map((e) => e + 1);
 console.timeEnd(timeUnique);
 ```
 
@@ -50,7 +50,7 @@ const profileUnique = "test profile";
 console.profile(profileUnique);
 Array(1000)
   .fill(0)
-  .map(e => e + 1);
+  .map((e) => e + 1);
 console.profileEnd(profileUnique);
 ```
 
