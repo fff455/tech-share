@@ -25,10 +25,9 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [vue-cli2项目结构分析.md](https://github.com/fff455/fe-share/tree/master/Vue/vue-cli2项目结构分析.md) 2020-06-08 update.
-* [度量学习.md](https://github.com/fff455/fe-share/tree/master/MachineLearning/度量学习.md) 2020-06-08 update.
 * [前端架构.md](https://github.com/fff455/fe-share/tree/master/Engineering/前端架构.md) 2020-06-10 update.
 * [Golang基础.md](https://github.com/fff455/fe-share/tree/master/Golang/Golang基础.md) 2020-06-10 update.
+* [vue-cli2项目结构分析.md](https://github.com/fff455/fe-share/tree/master/Vue/vue-cli2项目结构分析.md) 2020-06-15 update.
 <!-- NEW CONTENT-END -->
 
 > 更多内容或者加入我们，欢迎关注我们的公众号  
