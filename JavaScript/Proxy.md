@@ -16,7 +16,7 @@ const obj = {
   set prop(value) {
     console.log("Setting property prop to", value);
     this.propValue = value;
-  }
+  },
 };
 ```
 
@@ -29,7 +29,7 @@ setter/getter 有多个缺点：它们仅限 get 和 get 操作（显然）。�
 ```javascript
 const originalObj = {
   prop: 1,
-  anotherProp: "value"
+  anotherProp: "value",
 };
 const proxyObj = new Proxy(originalObj, {
   get(obj, prop) {
@@ -40,7 +40,7 @@ const proxyObj = new Proxy(originalObj, {
     console.log("Setting property", prop, "to", value);
     obj[prop] = value;
     return true;
-  }
+  },
 });
 originalObj.prop;
 originalObj.prop = 2;
