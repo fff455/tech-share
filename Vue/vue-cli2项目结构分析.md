@@ -265,11 +265,182 @@ build
 ├─build.js
 ├─check-version.js
 ├─logo.png
-├─utils.js
+├─utils.js // 工具类方法
 ├─vue-loader.conf.js   // webpack中vue-loader配置模块
 ├─webpack.base.conf.js // webpack基础配置
 ├─webpack.dev.conf.js  // 开发环境webpack配置
 └─webpack.prod.conf.js // 生产环境webpack配置
+```
+
+#### webpack.base.conf.js
+
+那么从 webpack 基础配置开始入手，开发环境和生产环境的 webpack 配置无非就是根据环境区分后，一同 merge 至基础配置上的。
+
+```javascript
+// webpack.base.conf.js
+'use strict'
+const path = require('path')
+const utils = require('./utils')
+const config = require('../config')
+const vueLoaderConfig = require('./vue-loader.conf')
+
+function resolve (dir) {
+  return path.join(__dirname, '..', dir)
+}
+```
+
+先看开头部分，引入了 node 模块 path，同目录下的 util.js (工具类方法) 与 vue-loader.conf.js (vue-loader配置模块)，以及上文基础配置中提到的 config/index.js。
+
+另外封装了 path.join() 的方法，这边简单提一下path内部的方法与参数：
+
+* path.resolve([from...],to) - 把一个路径或路径片段的序列解析为一个绝对路径。相当于执行cd操作。
+
+* path.join(path1，path2，path3.......) - 将路径片段使用特定的分隔符( window：\ )连接起来形成路径，并规范化生成的路径。若任意一个路径片段类型错误，会报错。若某个片段为 '..'，则会回到目录的上一级。
+
+* __dirname - 当前被执行文件所在的目录。
+
+接下来看正文部分。
+
+```javascript
+module.exports = {
+  context: path.resolve(__dirname, '../'), // webpack上下文，解析入口的起点，将入口路径设置为build文件夹上一级的项目根目录。由于webpack配置没有放置于根目录下，所以需要增加这个配置，保证后续相对路径的准确。
+  entry: { // webpack入口，上文“代码文件构成”部分已经提及，整个vue实例的入口
+    app: './src/main.js'
+  },
+  output: {
+    path: config.build.assetsRoot, // 出口文件路径
+    filename: '[name].js', // 打包生成的bundle文件名称
+    publicPath: process.env.NODE_ENV === 'production' // 外部静态资源路径，根据环境配置加以区别
+      ? config.build.assetsPublicPath
+      : config.dev.assetsPublicPath
+  },
+  resolve: {
+    extensions: ['.js', '.vue', '.json'], // 引入js、vue、json文件时不需要扩展名
+    alias: { // import或require时的翻译解析
+      'vue$': 'vue/dist/vue.esm.js', // import 'vue' 时，指代引入该路径下的js文件
+      '@': resolve('src'), // resolve 方法将 'src' 解析为 '根目录/src' ，当前配置下使用 '@' 来方便代码内部互相引用，如引入组件可直接写为 import component from '@components/component'，来指代引入src/components下的组件。
+    }
+  },
+  module: { // 根据扩展名解析文件
+    // ...  
+  },
+  node: {
+    // prevent webpack from injecting useless setImmediate polyfill because Vue
+    // source contains it (although only uses it if it's native).
+    setImmediate: false,
+    // prevent webpack from injecting mocks to Node native modules
+    // that does not make sense for the client
+    dgram: 'empty',
+    fs: 'empty',
+    net: 'empty',
+    tls: 'empty',
+    child_process: 'empty'
+  }
+}
+```
+
+在看webpack的module配置之前，先来看一看工具类内的方法 assetsPath 和 vue-loader 的配置内容，配合上文基础配置的内容，我们很容易就能知道assetsPath的作用就是将静态资源放入static文件夹下。
+
+```javascript
+// util.js
+exports.assetsPath = function (_path) {
+  const assetsSubDirectory = process.env.NODE_ENV === 'production'
+    ? config.build.assetsSubDirectory
+    : config.dev.assetsSubDirectory
+
+  return path.posix.join(assetsSubDirectory, _path)
+}
+```
+
+```javascript
+// vue-loader.conf.js
+// ...
+module.exports = {
+  // scourceMap方面的配置
+  loaders: utils.cssLoaders({
+    sourceMap: sourceMapEnabled,
+    extract: isProduction
+  }),
+  cssSourceMap: sourceMapEnabled,
+  cacheBusting: config.dev.cacheBusting,
+  
+  transformToRequire: {
+    video: ['src', 'poster'],
+    source: 'src',
+    img: 'src',
+    image: 'xlink:href'
+  }
+}
+```
+
+在vue-loader中，有个 transformToRequire 的配置，它节省了组件在引入一些资源时，需要的引入代码，举个例子。
+
+```html
+<avatar :src="logoUrl"></avatar>
+```
+
+现在有个 <avatar> 控件，我们用原生的 src 来引入其需要的图片，logoUrl 表示路径参数，在没有 transformToRequire 的配置时，我们需要用 require 或者 import 来引入资源。
+
+```javascript
+export default {
+  data() {
+    return{
+      logoUrl: require('./asset/logo.png')
+    }
+  }
+}
+```
+
+而当在vue-loader中配置了 transformToRequire 的内容后，引入这些资源就可以按如下的写法来写。于是代码就简化了。
+
+```html
+<avatar src="./asset/logo.png"></avatar>
+```
+
+那么，继续看module部分的配置，就显得非常简单了，使用 vue-loader 解析 vue 文件。其他就是常规配置，包括 babel-loader 解析 js 文件等。图片、视频、字体等资源也用了相应的 loader 进行解析，并打包至static文件夹下。
+
+```javascript
+module.exports = {
+  // ...
+  module: {
+    rules: [
+      { // 使用vue-loader解析vue文件，具体配置写于vue-loader.conf.js中
+        test: /\.vue$/,
+        loader: 'vue-loader',
+        options: vueLoaderConfig
+      },
+      { // 解析js代码，具体路径为src，test，以及依赖中的js代码
+        test: /\.js$/,
+        loader: 'babel-loader',
+        include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: utils.assetsPath('img/[name].[hash:7].[ext]')
+        }
+      },
+      {
+        test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: utils.assetsPath('media/[name].[hash:7].[ext]')
+        }
+      },
+      {
+        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
+        }
+      }
+    ]
+  }
+}
 ```
 
 
