@@ -145,4 +145,4 @@ class Test extends Component {
 
 - componentWillUnmount
 
-  此方法在组件被卸载前调用，可以在这里执行一些清理工作，比如清楚组件中使用的定时器，清楚 componentDidMount 中手动创建的 DOM 元素等，以避免引起内存泄漏。
+  此方法在组件被卸载前调用，可以在这里执行一些清理工作，比如清除组件中使用的定时器，清除 componentDidMount 中手动创建的 DOM 元素等，以避免引起内存泄漏。
