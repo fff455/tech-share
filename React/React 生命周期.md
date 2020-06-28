@@ -146,3 +146,68 @@ class Test extends Component {
 - componentWillUnmount
 
   此方法在组件被卸载前调用，可以在这里执行一些清理工作，比如清除组件中使用的定时器，清除 componentDidMount 中手动创建的 DOM 元素等，以避免引起内存泄漏。
+
+## React v16.4 后的生命周期
+
+在说 v16.4 之后的生命周期之前，我们先来谈一下 v16 这个版本有什么重大改变。
+
+React v16 做的重大的改变就是引入了 React Fiber。React Fiber 是对核心算法的重新实现，带来的主要效果是页面的性能更好了。
+
+### React 同步更新的局限
+
+在原先的 React 生命周期中，更新的过程是同步的，这会带来性能上的问题。
+
+React 组件再进行更新时，会调用各个生命周期，并且对 Virtual DOM 进行 Diff，最后更新 DOM。这个过程是同步的，也就是在 React 进行更新时，到最后更新 DOM，这整个过程是不可被打断的，整个阶段会一直占用 CPU 进行计算，直到更新结束。
+
+这样的设计在 DOM 树很大的时候会出现问题，假设每个节点更新需要 1ms，当更新 300 个节点时，需要 300ms，在整个组件更新的过程中，浏览器的主线程都是在处理更新上，假设用户在这中间在输入框内输入文字，也不会出现，直到更新结束后，之前输入的文字才会一股脑儿出现在输入框内。这样的卡顿显然对于用户体验来说是很差的。
+
+归根到底，这是 React 之前设计的缺陷。React 在 v16 之前设计的调用是栈调度。理解上也比较容易，比如我们的组件是这样的结构:
+
+```jsx
+<A>
+  <B>
+    <C></C>
+  </B>
+</A>
+```
+
+在更新时会进行栈式更新: A -> B -> C -> B -> A。栈结构的缺点是它不可以被随意 break，再 continue。
+
+### React Fiber
+
+React Fiber 不再使用栈调度器，而是采用链表的结构。链表对于 break 和 continue 是友好的。
+
+解决同步时间过长导致的性能问题就是使用分片来解决：React 将更新任务划分为很多小片，在一段小片任务结束后，会将控制权返回 React 负责协调的程序，再选择一个优先级比较高的小片进行执行。这就意味着 React 的更新过程是可以被打断的。
+
+我们可以把 React 的一次更新划分为两个大阶段，第一个阶段 Reconciliation 是进行 Diff，计算出现有的 DOM 中哪些是需要更新的，这个阶段是可以被打断的；第二个阶段 Commit 是对计算得出的结果进行 DOM 更新，这个阶段还是不能被打断的。
+
+具体在生命周期上，第一阶段的生命周期有
+
+- componentWillMount
+- componentWillReceiveProps
+- shouldComponentUpdate
+- componentWillUpdate
+
+第二阶段的生命周期有
+
+- componentDidMount
+- componentDidUpdate
+- componentWillUnmount
+
+也就是说，第一阶段的生命周期都可能被重复执行，componentWillReceiveProps 和 shouldComponentUpdate 往往不包含副作用，所以多执行几次问题不大，但是 componentWillMount 和 componentWillUpdate 往往可能存在副作用（ajax 请求，setState），所以执行多次可能会导致问题。
+
+由此，React 重新设计了生命周期
+
+![](./image/lifecycle_after.png)
+
+索性将第一阶段的生命周期全部改为纯函数，其中`shouldComponentUpdate`在前文中已经介绍，是对 Props 和 State 进行计算返回 true 或 false，是一个纯函数，初次之外，新增了一个函数`getDerivedStateFromProps`。
+
+### getDerivedStateFromProps
+
+在组件创建时和更新时的 render 方法之前调用，它应该返回一个对象来更新状态，或者返回 null 来不更新任何内容。（根据 nextProps 和 prevState 计算出预期的状态改变，返回结果会被送给 setState）
+
+`getDerivedStateFromProps`是一个静态函数，使用前需要加`static`声明。静态函数无法在内部访问`this`，也就从根本上解决了副作用的问题。
+
+### getSnapshotBeforeUpdate
+
+getSnapshotBeforeUpdate() 被调用于 render 之后，可以读取但无法使用 DOM 的时候。它使您的组件可以在可能更改之前从 DOM 捕获一些信息（例如滚动位置）。此生命周期返回的任何值都将作为参数传递给 componentDidUpdate（）。
