@@ -443,6 +443,151 @@ module.exports = {
 }
 ```
 
+#### webpack.dev.conf.js
+
+继续看开发环境下 webpack 的配置，首先分析一波引入的模块。
+
+```javascript
+'use strict'
+const utils = require('./utils')
+const webpack = require('webpack')
+const config = require('../config')
+const merge = require('webpack-merge')
+const path = require('path')
+const baseWebpackConfig = require('./webpack.base.conf')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
+const portfinder = require('portfinder')
+```
+
+都还是一些比较正常的本地配置与外部插件引入。值得提一提的就是几个插件，
+
+* CopyWebpackPlugin : webpack拷贝静态资源插件；
+
+* HtmlWebpackPlugin : 自动生成入口html文件插件，webpack的老熟人插件了；
+
+* FriendlyErrorsPlugin : 上文有提到过，用于调整报错内容;
+
+* portfinder : npm配置端口的依赖。
+
+接下来是主体部分的配置，
+
+```javascript
+const HOST = process.env.HOST
+const PORT = process.env.PORT && Number(process.env.PORT)
+
+const devWebpackConfig = merge(baseWebpackConfig, {
+  module: {
+    rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
+  },
+  // cheap-module-eval-source-map is faster for development
+  devtool: config.dev.devtool,
+
+  // these devServer options should be customized in /config/index.js
+  devServer: {
+    // ...
+  },
+  plugins: [
+    // ...
+  ]
+})
+```
+
+HOST 与 POST 先留着，放到下文 devServer 里面说明。总体来看，开发环境的配置就是将开发环境特有的 webpack 配置通过 webpack-merge 合并到 webpack 基础配置当中。里面用到的开发环境特有的静态资源，比如插件 (plugin)，直接在文件内进行了引入。而其需要的自定义设置，其实看注释也可以发现，都是在上文提到的基础配置 (/config/index.js) 中，支持开发人员进行自定义配置的。
+
+那么既然 module 和 devtool 两个部分内容比较少，就先提一提，module.rules 就在 base 配置的基础上，增加了开发环境下不同扩展名样式代码的映射方式，去看工具类(utils)的代码，可以发现样式代码支持的扩展名有 css, postcss, less, sass, scss, stylus, styl 共七种。而 devtool 则是 vue 项目主体源码在控制台的映射方式。
+
+继续看各个部分的细节。
+
+```javascript
+const devWebpackConfig = merge(baseWebpackConfig, {
+  // ...
+
+  // these devServer options should be customized in /config/index.js
+  devServer: {
+    clientLogLevel: 'warning', // 控制台日志等级，默认为info，为none时不展示任何日志
+    historyApiFallback: { // 任意路径出现404响应的时候会自动转跳至入口html文件
+      rewrites: [
+        { from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'index.html') },
+      ],
+    },
+    hot: true, // 模块热替换
+    contentBase: false, // 配合CopyWebpackPlugin插件使用，非禁用时提供静态资源文件路径
+    compress: true, // 一起服务都启用gzip压缩
+    host: HOST || config.dev.host, // 关于HOST与PORT，其实可以直接在config/index.js内进行配置
+    port: PORT || config.dev.port, // 配合上文埋的一个坑，我们知道HOST与PORT也可以通过node环境配置，且优先于config的配置
+    open: config.dev.autoOpenBrowser, // 是否自动打开浏览器
+    overlay: config.dev.errorOverlay // 在出现编译报错时，是否将报错信息整屏覆盖界面
+      ? { warnings: false, errors: true } // 这边还有个人性化的配置，就是只有编译报错才覆盖，不包括warning
+      : false,
+    publicPath: config.dev.assetsPublicPath, // 静态资源文件目录
+    proxy: config.dev.proxyTable,  // 跨域配置
+    quiet: true, // 启用后，除启动信息外，其余webpack报错不会出现在控制台
+    watchOptions: { // 是否开启代码变化的监听，也可以配置具体数据来作为时间轮询监听
+      poll: config.dev.poll,
+    }
+  },
+  plugins: [
+    // 将开发环境特有配置信息定义为一个webpack插件
+    new webpack.DefinePlugin({
+      'process.env': require('../config/dev.env')
+    }),
+    // 基于webpack-dev-server，开发环境下用于只替换修改部分的代码模块，而不用重新编译。生产环境下HMR不可启用。
+    new webpack.HotModuleReplacementPlugin(), 
+    // 当开启 HMR 的时候使用该插件会显示模块的相对路径，建议用于开发环境。
+    new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
+    // 在编译出现错误时，使用 NoEmitOnErrorsPlugin 来跳过输出阶段。这样可以确保输出部分的代码(如console.log)中不会包含错误。
+    new webpack.NoEmitOnErrorsPlugin(),
+    // 生成项目入口html文件
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: 'index.html',
+      inject: true
+    }),
+    // 迁移静态资源内容
+    new CopyWebpackPlugin([
+      {
+        from: path.resolve(__dirname, '../static'),
+        to: config.dev.assetsSubDirectory,
+        ignore: ['.*']
+      }
+    ])
+  ]
+})
+```
+
+看完整个细节配置，其实很多内容都在 config/index.js 有所提及，这也侧面反应了 config 才是面向开发者的配置内容。
+
+最后部分则是一个异步方法，获取到端口后开始运行webpack
+
+```javascript
+module.exports = new Promise((resolve, reject) => {
+  // 在运行 webpack 前先获取到端口信息，可以是node提供，也可以直接在config内配置
+  portfinder.basePort = process.env.PORT || config.dev.port
+  portfinder.getPort((err, port) => {
+    if (err) { // 获取失败，抛出错误
+      reject(err)
+    } else { // 获取成功，添加入webapck配置
+      process.env.PORT = port
+      devWebpackConfig.devServer.port = port
+
+      // Add FriendlyErrorsPlugin
+      devWebpackConfig.plugins.push(new FriendlyErrorsPlugin({
+        compilationSuccessInfo: { // webpack运行完成提示
+          messages: [`Your application is running here: http://${devWebpackConfig.devServer.host}:${port}`],
+        },
+        onErrors: config.dev.notifyOnErrors
+        ? utils.createNotifierCallback()
+        : undefined
+      }))
+
+      resolve(devWebpackConfig)
+    }
+  })
+})
+```
+
 
 ### 项目打包配置
 
