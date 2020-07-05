@@ -253,6 +253,7 @@ module.exports = {
     productionGzipExtensions: ['js', 'css'], // gzip支持的文件类型
 
     bundleAnalyzerReport: process.env.npm_config_report // 能够在浏览器中看到bundle的分析图
+  }
 }
 ```
 
@@ -588,9 +589,158 @@ module.exports = new Promise((resolve, reject) => {
 })
 ```
 
+#### webpack.prod.conf.js
+
+生产环境下的 ``webpack`` 配置，重点来看其与开发环境的差异
+
+```javascript
+'use strict'
+const path = require('path')
+const utils = require('./utils')
+const webpack = require('webpack')
+const config = require('../config')
+const merge = require('webpack-merge')
+const baseWebpackConfig = require('./webpack.base.conf')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+```
+
+首先还是从引入的模块部分开始入手。显然，像 ``FriendlyErrorsPlugin`` 这类开发环境下的提示性质的插件已经被去除，取而代之的是 ``OptimizeCSSPlugin`` 和 ``UglifyJsPlugin`` 这类的对代码进行优化与压缩的插件，以此来尽可能的减小生产环境下的项目包体。而由于运行环境的差异，生产环境也不再需要运行地址与端口的配置，交由后端进行处理。
+
+```javascript
+const webpackConfig = merge(baseWebpackConfig, {
+  module: {
+    rules: utils.styleLoaders({
+      sourceMap: config.build.productionSourceMap,
+      extract: true,
+      usePostCSS: true
+    })
+  },
+  devtool: config.build.productionSourceMap ? config.build.devtool : false,
+  output: {
+    // ...
+  },
+  plugins: [
+    // ...
+  ]
+})
+```
+
+继续看 ``webpack`` 主体部分的配置，``module`` 部分相比开发环境，多了一个 ``extract: true`` 的配置，查看工具类中的方法，可以发现其实就是启用了 ``vue-style-loader`` 来加载样式代码，依旧是代码的优化。而 ``devtool`` 则不再与开发环境那样使控制台展示源代码，而是经过转译后的js代码，一来可以说是对生产环境下代码的保护，二来也是为了提高加载效率。
+
+```javascript
+const webpackConfig = merge(baseWebpackConfig, {
+  // ...
+  output: {
+    path: config.build.assetsRoot,
+    filename: utils.assetsPath('js/[name].[chunkhash].js'),
+    chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
+  },
+})
+```
+
+那么最大的区别，就是开发环境下的 ``devServer`` 替换为了 ``output``，``output`` 的配置就不像``devServer`` 那么繁琐了，仅仅配置了打包输出路径，``bundle`` 文件的命名，以及``chunk``文件的命名。
+
+至于插件部分，一部分已经在开发环境的配置中进行了说明，且这一部分官方的代码注释写的相当详细，所以只挑选了几个值得提一提的生产环境下的插件
+
+```javascript
+const webpackConfig = merge(baseWebpackConfig, {
+  // ...
+  plugin: [
+    // ...
+    // 非常通用的js代码优化与压缩的插件，在 webpack 章节中也有提及
+    new UglifyJsPlugin({
+      uglifyOptions: {
+        compress: {
+          warnings: false
+        }
+      },
+      sourceMap: config.build.productionSourceMap,
+      parallel: true
+    }),
+    // css代码优化与压缩，以及css打包后的命名规则与路径配置
+    new ExtractTextPlugin({
+      filename: utils.assetsPath('css/[name].[contenthash].css'),
+      allChunks: true,
+    }),
+    new OptimizeCSSPlugin({
+      cssProcessorOptions: config.build.productionSourceMap
+        ? { safe: true, map: { inline: false } }
+        : { safe: true }
+    }),
+    // ...
+    // 对项目引入并且用到的依赖进行打包优化
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks (module) {
+        return (
+          module.resource &&
+          /\.js$/.test(module.resource) &&
+          module.resource.indexOf(
+            path.join(__dirname, '../node_modules')
+          ) === 0
+        )
+      }
+    }),
+  ]
+})
+```
+
+最后一块的代码是与我们上文所提及的 ``productionGzip`` 与 ``bundleAnalyzerReport`` 配置相关的。前者规定是否开启gzip，需要配合后端使用。而后者则是用于查看控制台中的 bundle 识图。这两个 if 逻辑在默认的配置下都是不执行的。当然在执行后，我们也可以通过代码发现这两个都会被添加进入 ``webpack.plugins`` 当中。两者的最终目标，依旧是为了优化打包后的代码。
+
+```javascript
+if (config.build.productionGzip) {
+  const CompressionWebpackPlugin = require('compression-webpack-plugin')
+
+  webpackConfig.plugins.push(
+    new CompressionWebpackPlugin({
+      asset: '[path].gz[query]',
+      algorithm: 'gzip',
+      test: new RegExp(
+        '\\.(' +
+        config.build.productionGzipExtensions.join('|') +
+        ')$'
+      ),
+      threshold: 10240,
+      minRatio: 0.8
+    })
+  )
+}
+
+if (config.build.bundleAnalyzerReport) {
+  const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+  webpackConfig.plugins.push(new BundleAnalyzerPlugin())
+}
+```
 
 ### 项目打包配置
 
-### 环境配置
+
 
 ### 其他配置
+
+其他还有一些位于根目录下的插件配置，包括每个项目都有的 ``.gitignore`` 与 ``README.md``，以及 ``package.json``。在依赖配置文件中，我们可以看到 vue-cli 一共提供了三个命令，两个执行功能，分别用于开发环境与生产环境。
+
+```json
+{
+  "scripts": {
+    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "start": "npm run dev",
+    "build": "node build/build.js"
+  },
+}
+```
+
+而另外在根目录下并不是很常见的配置，就 vue-cli 使用的一些非常便利的开源插件
+
+* .babelrc - 用于设置 ``javascript`` 的编译规则以及插件
+
+* .postcssrc.js - 方便样式代码编写，如插件 ``autoPreFixer`` 提供的自动补充浏览器前缀的功能，减少了许多样式代码编写的工作量
+
+* .eslintrc.js - eslint是用来管理和检测js代码风格的工具，可以和编辑器搭配使用，如vscode的eslint插件 当有不符合配置文件内容的代码出现就会报错或者警告。如果项目建立配置时不选择开启eslint，那么根目录下也不会有这个配置文件
+
+### 结语
+
