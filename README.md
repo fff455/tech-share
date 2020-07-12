@@ -64,7 +64,6 @@
 * [Node模块系统.md](https://github.com/fff455/tech-share/tree/master/Node/Node模块系统.md) 2020-07-06 update.
 * [Node特点&进程与线程.md](https://github.com/fff455/tech-share/tree/master/Node/Node特点&进程与线程.md) 2020-07-06 update.
 * [Stream.md](https://github.com/fff455/tech-share/tree/master/Node/Stream.md) 2020-07-06 update.
-* [Hooks.md](https://github.com/fff455/tech-share/tree/master/React/Hooks.md) 2020-07-06 update.
 * [React数据流.md](https://github.com/fff455/tech-share/tree/master/React/React数据流.md) 2020-07-06 update.
 * [React生命周期.md](https://github.com/fff455/tech-share/tree/master/React/React生命周期.md) 2020-07-06 update.
 * [SWR.md](https://github.com/fff455/tech-share/tree/master/React/SWR.md) 2020-07-06 update.
@@ -74,6 +73,8 @@
 * [vue-cli2项目结构分析.md](https://github.com/fff455/tech-share/tree/master/Vue/vue-cli2项目结构分析.md) 2020-07-06 update.
 * [记录一个问题的探索过程.md](https://github.com/fff455/tech-share/tree/master/Vue/记录一个问题的探索过程.md) 2020-07-06 update.
 * [Flutter介绍.md](https://github.com/fff455/tech-share/tree/master/跨端/Flutter介绍.md) 2020-07-06 update.
+* [npm-dependency.md](https://github.com/fff455/tech-share/tree/master/Node/npm-dependency.md) 2020-07-12 update.
+* [Hooks.md](https://github.com/fff455/tech-share/tree/master/React/Hooks.md) 2020-07-12 update.
 <!-- NEW CONTENT-END -->
 
 > 更多内容或者加入我们，欢迎关注我们的公众号  
