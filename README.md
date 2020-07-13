@@ -75,6 +75,7 @@
 * [Flutter介绍.md](https://github.com/fff455/tech-share/tree/master/跨端/Flutter介绍.md) 2020-07-06 update.
 * [npm-dependency.md](https://github.com/fff455/tech-share/tree/master/Node/npm-dependency.md) 2020-07-12 update.
 * [Hooks.md](https://github.com/fff455/tech-share/tree/master/React/Hooks.md) 2020-07-12 update.
+* [隐马尔可夫模型.md](https://github.com/fff455/tech-share/tree/master/MachineLearning/隐马尔可夫模型.md) 2020-07-13 update.
 <!-- NEW CONTENT-END -->
 
 > 更多内容或者加入我们，欢迎关注我们的公众号  
