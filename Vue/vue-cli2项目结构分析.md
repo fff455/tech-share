@@ -800,4 +800,4 @@ rm(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), err => {
 
 前后一共分了六期对``vue-cli2``脚手架代码进行了分析。总的来说，``vue-cli``作为一个``Vue``官方提供的前端脚手架，对于一个新人上路的Vue开发来说是相当友好的，确实是做到了低成本，上手即开发的效果。如果有更复杂的需要，也可以基于``vue-cli``脚手架进行改进，更加符合自身的项目要求。在``Vue``已经发展到3.x的当下，虽然``vue-cli2``已经有了``vue-cli3``这一全新版本，但它依旧被不少开发所喜爱。
 
-对于``vue-cli2``的构建思路，其本质上还是在于``webpack``与``Vue`的相结合。在学习过程中，可以明显感受到，大部分时间其实都是在学webpack配置，在一个个搞懂webpack代码中各个纷繁复杂配置的作用。甚至可以把vue-cli当成一个学习webpack的扩展。
+对于``vue-cli2``的构建思路，其本质上还是在于``webpack``与``Vue``的相结合。在学习过程中，可以明显感受到，大部分时间其实都是在学webpack配置，在一个个搞懂webpack代码中各个纷繁复杂配置的作用。甚至可以把vue-cli当成一个学习webpack的扩展。
