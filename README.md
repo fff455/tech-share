@@ -29,6 +29,7 @@
 * [vue-cli2项目结构分析.md](https://github.com/fff455/tech-share/tree/master/Vue/vue-cli2项目结构分析.md) 2020-07-19 update.
 * [html5语义与结构元素.md](https://github.com/fff455/tech-share/tree/master/HTML/html5语义与结构元素.md) 2020-07-20 update.
 * [TypeScript.md](https://github.com/fff455/tech-share/tree/master/JavaScript/TypeScript.md) 2020-07-20 update.
+* [隐马尔可夫模型2.md](https://github.com/fff455/tech-share/tree/master/MachineLearning/隐马尔可夫模型2.md) 2020-07-25 update.
 <!-- NEW CONTENT-END -->
 
 > 更多内容或者加入我们，欢迎关注我们的公众号  
