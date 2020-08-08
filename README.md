@@ -14,6 +14,7 @@
 * [Node](https://github.com/fff455/tech-share/tree/master/Node)
 * [React](https://github.com/fff455/tech-share/tree/master/React)
 * [Vue](https://github.com/fff455/tech-share/tree/master/Vue)
+* [可视化](https://github.com/fff455/tech-share/tree/master/可视化)
 * [跨端](https://github.com/fff455/tech-share/tree/master/跨端)
 <!-- RECORD-END -->
 
@@ -28,6 +29,7 @@
 ## New Content
 * [PyTorch数据处理.md](https://github.com/fff455/tech-share/tree/master/MachineLearning/PyTorch数据处理.md) 2020-08-02 update.
 * [Vite.md](https://github.com/fff455/tech-share/tree/master/Vue/Vite.md) 2020-08-08 update.
+* [Echarts圆滑曲线.md](https://github.com/fff455/tech-share/tree/master/可视化/Echarts圆滑曲线.md) 2020-08-08 update.
 <!-- NEW CONTENT-END -->
 
 > 更多内容或者加入我们，欢迎关注我们的公众号  
