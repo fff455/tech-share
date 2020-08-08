@@ -26,7 +26,6 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [snowpack.md](https://github.com/fff455/tech-share/tree/master/Engineering/snowpack.md) 2020-07-26 update.
 * [PyTorch数据处理.md](https://github.com/fff455/tech-share/tree/master/MachineLearning/PyTorch数据处理.md) 2020-08-02 update.
 <!-- NEW CONTENT-END -->
 
