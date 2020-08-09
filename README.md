@@ -27,7 +27,6 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [PyTorch数据处理.md](https://github.com/fff455/tech-share/tree/master/MachineLearning/PyTorch数据处理.md) 2020-08-02 update.
 * [Vite.md](https://github.com/fff455/tech-share/tree/master/Vue/Vite.md) 2020-08-08 update.
 * [Echarts圆滑曲线.md](https://github.com/fff455/tech-share/tree/master/可视化/Echarts圆滑曲线.md) 2020-08-08 update.
 <!-- NEW CONTENT-END -->
