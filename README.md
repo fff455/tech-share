@@ -27,8 +27,6 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [Vite.md](https://github.com/fff455/tech-share/tree/master/Vue/Vite.md) 2020-08-08 update.
-* [Echarts圆滑曲线.md](https://github.com/fff455/tech-share/tree/master/可视化/Echarts圆滑曲线.md) 2020-08-08 update.
 * [Vue2.x指令.md](https://github.com/fff455/tech-share/tree/master/Vue/Vue2.x指令.md) 2020-08-10 update.
 <!-- NEW CONTENT-END -->
 
