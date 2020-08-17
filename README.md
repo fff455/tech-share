@@ -28,6 +28,7 @@
 <!-- NEW CONTENT-START -->
 ## New Content
 * [PyTorch优化器.md](https://github.com/fff455/tech-share/tree/master/MachineLearning/PyTorch优化器.md) 2020-08-17 update.
+* [npm版本号.md](https://github.com/fff455/tech-share/tree/master/Engineering/npm版本号.md) 2020-08-17 update.
 <!-- NEW CONTENT-END -->
 
 > 更多内容或者加入我们，欢迎关注我们的公众号  
