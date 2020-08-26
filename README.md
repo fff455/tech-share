@@ -27,7 +27,6 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [npm版本号.md](https://github.com/fff455/tech-share/tree/master/Engineering/npm版本号.md) 2020-08-17 update.
 * [Vue2.x指令.md](https://github.com/fff455/tech-share/tree/master/Vue/Vue2.x指令.md) 2020-08-24 update.
 * [深度学习常用激活函数.md](https://github.com/fff455/tech-share/tree/master/MachineLearning/深度学习常用激活函数.md) 2020-08-24 update.
 <!-- NEW CONTENT-END -->
