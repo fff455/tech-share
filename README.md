@@ -29,6 +29,7 @@
 ## New Content
 * [Graphics-API.md](https://github.com/fff455/tech-share/tree/master/可视化/Graphics-API.md) 2020-08-30 update.
 * [OffscreenCanvas.md](https://github.com/fff455/tech-share/tree/master/可视化/OffscreenCanvas.md) 2020-08-30 update.
+* [深度学习推荐系统算法整理.md](https://github.com/fff455/tech-share/tree/master/MachineLearning/深度学习推荐系统算法整理.md) 2020-09-06 update.
 <!-- NEW CONTENT-END -->
 
 > 更多内容或者加入我们，欢迎关注我们的公众号  
