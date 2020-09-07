@@ -8,11 +8,13 @@
 * [CSS](https://github.com/fff455/tech-share/tree/master/CSS)
 * [Engineering](https://github.com/fff455/tech-share/tree/master/Engineering)
 * [Golang](https://github.com/fff455/tech-share/tree/master/Golang)
+* [HTML](https://github.com/fff455/tech-share/tree/master/HTML)
 * [JavaScript](https://github.com/fff455/tech-share/tree/master/JavaScript)
 * [MachineLearning](https://github.com/fff455/tech-share/tree/master/MachineLearning)
 * [Node](https://github.com/fff455/tech-share/tree/master/Node)
 * [React](https://github.com/fff455/tech-share/tree/master/React)
 * [Vue](https://github.com/fff455/tech-share/tree/master/Vue)
+* [可视化](https://github.com/fff455/tech-share/tree/master/可视化)
 * [跨端](https://github.com/fff455/tech-share/tree/master/跨端)
 <!-- RECORD-END -->
 
@@ -25,9 +27,11 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [npm-dependency.md](https://github.com/fff455/tech-share/tree/master/Node/npm-dependency.md) 2020-07-12 update.
-* [Hooks.md](https://github.com/fff455/tech-share/tree/master/React/Hooks.md) 2020-07-12 update.
-* [隐马尔可夫模型.md](https://github.com/fff455/tech-share/tree/master/MachineLearning/隐马尔可夫模型.md) 2020-07-13 update.
+* [深度学习推荐系统算法整理.md](https://github.com/fff455/tech-share/tree/master/MachineLearning/深度学习推荐系统算法整理.md) 2020-09-06 update.
+* [Canvas图片处理.md](https://github.com/fff455/tech-share/tree/master/可视化/Canvas图片处理.md) 2020-09-06 update.
+* [Canvas灰度处理原理.md](https://github.com/fff455/tech-share/tree/master/可视化/Canvas灰度处理原理.md) 2020-09-06 update.
+* [词云布局解析.md](https://github.com/fff455/tech-share/tree/master/可视化/词云布局解析.md) 2020-09-06 update.
+* [颜色空间.md](https://github.com/fff455/tech-share/tree/master/可视化/颜色空间.md) 2020-09-07 update.
 <!-- NEW CONTENT-END -->
 
 > 更多内容或者加入我们，欢迎关注我们的公众号  

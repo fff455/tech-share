@@ -718,7 +718,61 @@ if (config.build.bundleAnalyzerReport) {
 
 ### 项目打包配置
 
+项目打包脚本``build.js``与webpack配置一样位于build目录下。毕竟打包也是基于webpack的。具体打包命令已经在本文开头贴出，从  ``package.json`` 中也可以看出打包命令其实就是 ``node build.js``
 
+由于篇幅比较小，那么直接看代码。
+
+```javascript
+'use strict'
+require('./check-versions')()
+
+process.env.NODE_ENV = 'production'
+
+// 引入的依赖的作用在下方的注释中具体说明
+const ora = require('ora')
+const rm = require('rimraf')
+const path = require('path')
+const chalk = require('chalk')
+const webpack = require('webpack')
+const config = require('../config')
+const webpackConfig = require('./webpack.prod.conf')
+
+// 打包开始提示，使用ora达到一个轮转的loading效果
+const spinner = ora('building for production...')
+spinner.start()
+
+// rimraf，类似于 rm -rf 命令，删除dist文件夹下的原有打包内容
+rm(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), err => {
+  // 回调方法内进行实际打包操作，当然如果删除的时候出现异常需要抛出
+  if (err) throw err
+  // 使用webpack进行打包，webpack配置来自于生产环境webpack配置webpack.prod.conf.js
+  webpack(webpackConfig, (err, stats) => {
+    // 打包完成后的回调
+    spinner.stop() // 在终端结束轮转动画表示打包结束
+    if (err) throw err // 遇到报错抛出异常
+    // 输出打包内容，process.stdout.write类似于console.log，它会将打包输出的内容进行格式化
+    process.stdout.write(stats.toString({ // 输出内容格式化配置
+      colors: true, // 打包内容颜色高亮
+      modules: false, // 去掉内置模块信息
+      children: false, // 去掉子模块，如果需要编译typeScript，则置为true
+      chunks: false, // 增加依赖信息，设置false能允许较少的冗长输出
+      chunkModules: false // 去除包里内置模块的信息
+    }) + '\n\n')
+
+    if (stats.hasErrors()) { // 如果上方有错误抛出，就进入打包错误的逻辑
+      console.log(chalk.red('  Build failed with errors.\n'))
+      process.exit(1)
+    }
+
+    // 无错误抛出，输出打包完成提示，chalk依赖就用于在终端中输出带颜色的提示
+    console.log(chalk.cyan('  Build complete.\n'))
+    console.log(chalk.yellow(
+      '  Tip: built files are meant to be served over an HTTP server.\n' +
+      '  Opening index.html over file:// won\'t work.\n'
+    ))
+  })
+})
+```
 
 ### 其他配置
 
@@ -744,3 +798,6 @@ if (config.build.bundleAnalyzerReport) {
 
 ### 结语
 
+前后一共分了六期对``vue-cli2``脚手架代码进行了分析。总的来说，``vue-cli``作为一个``Vue``官方提供的前端脚手架，对于一个新人上路的Vue开发来说是相当友好的，确实是做到了低成本，上手即开发的效果。如果有更复杂的需要，也可以基于``vue-cli``脚手架进行改进，更加符合自身的项目要求。在``Vue``已经发展到3.x的当下，虽然``vue-cli2``已经有了``vue-cli3``这一全新版本，但它依旧被不少开发所喜爱。
+
+对于``vue-cli2``的构建思路，其本质上还是在于``webpack``与``Vue``的相结合。在学习过程中，可以明显感受到，大部分时间其实都是在学webpack配置，在一个个搞懂webpack代码中各个纷繁复杂配置的作用。甚至可以把vue-cli当成一个学习webpack的扩展。
