@@ -27,7 +27,6 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [深度学习推荐系统算法整理.md](https://github.com/fff455/tech-share/tree/master/MachineLearning/深度学习推荐系统算法整理.md) 2020-09-06 update.
 * [Canvas图片处理.md](https://github.com/fff455/tech-share/tree/master/可视化/Canvas图片处理.md) 2020-09-06 update.
 * [Canvas灰度处理原理.md](https://github.com/fff455/tech-share/tree/master/可视化/Canvas灰度处理原理.md) 2020-09-06 update.
 * [词云布局解析.md](https://github.com/fff455/tech-share/tree/master/可视化/词云布局解析.md) 2020-09-06 update.
