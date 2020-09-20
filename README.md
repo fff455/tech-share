@@ -27,7 +27,6 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [颜色空间.md](https://github.com/fff455/tech-share/tree/master/可视化/颜色空间.md) 2020-09-07 update.
 * [AutoRec算法及后续发展.md](https://github.com/fff455/tech-share/tree/master/MachineLearning/AutoRec算法及后续发展.md) 2020-09-14 update.
 <!-- NEW CONTENT-END -->
 
