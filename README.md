@@ -27,9 +27,7 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [AutoRec算法及后续发展.md](https://github.com/fff455/tech-share/tree/master/MachineLearning/AutoRec算法及后续发展.md) 2020-09-14 update.
-* [Monorepo最佳实践.md](https://github.com/fff455/tech-share/tree/master/Engineering/Monorepo最佳实践.md) 2020-09-20 update.
-* [项目依赖分析.md](https://github.com/fff455/tech-share/tree/master/Engineering/项目依赖分析.md) 2020-09-20 update.
+* [VAE算法.md](https://github.com/fff455/tech-share/tree/master/MachineLearning/VAE算法.md) 2020-09-27 update.
 <!-- NEW CONTENT-END -->
 
 > 更多内容或者加入我们，欢迎关注我们的公众号  
