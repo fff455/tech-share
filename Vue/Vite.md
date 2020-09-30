@@ -81,6 +81,62 @@ Vite
 
   很明显对单个 ``Vue`` 文件来说，都会被请求三次，先后分别为script、style、template，如图中的``App.vue``。而 ``vue-cli`` 中，我们会发现浏览器请求到的将是一个合并好后的 ``App.js``。实际上就是 ``Vite`` 在拦截请求时，不仅对路径进行了处理，也实现了实时的按需编译。
 
+# 在Vite中使用Vue-Router与VueX(补充)
+
+使用``Vite``进行项目构建时，没有像``vue-cli``那样提供那么多的配置项，其中就包括``Vue-Router``与``VueX``，需要在项目构建完成后进行额外引入，随着``Vue3``文档与代码的逐渐完善，``Vue-router4。0``与``VueX4.0``的发布，引入router与store所需的Api也已经有了提供。
+
+```javascript
+// store/index.js
+import { createStore } from 'vuex'
+
+export default createStore({
+  state: {
+  },
+  mutations: {
+  },
+  actions: {
+  },
+  modules: {
+  }
+})
+```
+
+```javascript
+// router/index.js
+import { createRouter, createWebHashHistory } from 'vue-router'
+// 若使用ts，则需要引入RouteRecordRaw作为routes的类型
+import HelloWorld from '../components/HelloWorld.vue'
+
+const routes = [
+  {
+    path: '/',
+    name: 'Home',
+    component: Home
+  }
+]
+
+const router = createRouter({
+  history: createWebHashHistory(),
+  routes
+})
+
+export default router
+```
+
+```javascript
+// main.js
+// 入口文件挂载store与router
+import { createApp } from 'vue'
+import App from './App.vue'
+import router from './router'
+import store from './store'
+import './index.css'
+
+createApp(App).use(store).use(router).mount('#app')
+```
+
 # 结语
 
-作为 ``Vue`` 全家桶新成员之一， ``Vite`` 无疑是未来可期的。但在目前的生态下， ``Vite`` 想要逐渐替换 ``Webpack`` ，不仅需要其本身逐渐走向成熟，也需要社区生态更多的支持。
+作为 ``Vue`` 全家桶新成员之一， ``Vite`` 无疑是未来可期的。在``Vue3``的官方文档中，``Vite``已经是一个与``@vue/cli``同级别的项目构建工具。
+
+但在目前的生态下， ``Vite`` 想要逐渐替换 ``Webpack`` ，不仅需要其本身逐渐走向成熟，也需要社区生态更多的支持。
