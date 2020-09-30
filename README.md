@@ -29,6 +29,8 @@
 ## New Content
 * [VAE算法.md](https://github.com/fff455/tech-share/tree/master/MachineLearning/VAE算法.md) 2020-09-27 update.
 * [3D数学基础.md](https://github.com/fff455/tech-share/tree/master/可视化/3D数学基础.md) 2020-09-27 update.
+* [Electron-Vue+Python项目实践.md](https://github.com/fff455/tech-share/tree/master/Vue/Electron-Vue+Python项目实践.md) 2020-09-30 update.
+* [Vite.md](https://github.com/fff455/tech-share/tree/master/Vue/Vite.md) 2020-09-30 update.
 <!-- NEW CONTENT-END -->
 
 > 更多内容或者加入我们，欢迎关注我们的公众号  
