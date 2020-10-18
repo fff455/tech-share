@@ -27,7 +27,6 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [纯CSS实现可拖动布局.md](https://github.com/fff455/tech-share/tree/master/CSS/纯CSS实现可拖动布局.md) 2020-10-11 update.
 * [GLSL.md](https://github.com/fff455/tech-share/tree/master/可视化/GLSL.md) 2020-10-12 update.
 * [序列预测ConvTran算法.md](https://github.com/fff455/tech-share/tree/master/MachineLearning/序列预测ConvTran算法.md) 2020-10-12 update.
 <!-- NEW CONTENT-END -->
