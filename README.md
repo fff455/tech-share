@@ -27,8 +27,7 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [GLSL.md](https://github.com/fff455/tech-share/tree/master/可视化/GLSL.md) 2020-10-12 update.
-* [序列预测ConvTran算法.md](https://github.com/fff455/tech-share/tree/master/MachineLearning/序列预测ConvTran算法.md) 2020-10-12 update.
+* [Vue组件通信整理.md](https://github.com/fff455/tech-share/tree/master/Vue/Vue组件通信整理.md) 2020-10-19 update.
 <!-- NEW CONTENT-END -->
 
 > 更多内容或者加入我们，欢迎关注我们的公众号  
