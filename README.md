@@ -27,7 +27,6 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [React_Ref.md](https://github.com/fff455/tech-share/tree/master/React/React_Ref.md) 2020-10-25 update.
 * [Embarassingly Autoencoder算法.md](https://github.com/fff455/tech-share/tree/master/MachineLearning/Embarassingly Autoencoder算法.md) 2020-10-28 update.
 <!-- NEW CONTENT-END -->
 
