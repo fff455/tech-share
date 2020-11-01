@@ -104,6 +104,7 @@
       }
     ],
     ...
+  }
   ```
 
 * 在第一次打包过程中，也会因为种种网络问题遇到许多的坑点。最新版的``electron-vue``在第一次打包时，会下载``electron-v2.0.18-win32-x64.zip``文件，该文件下载失败就会导致打包报错。建议直接从淘宝镜像上下载[对应版本](https://npm.taobao.org/mirrors/electron/)，并放至目录``User/.electron``(MacOS)、``User/AppData/Local/electron/Cache``(Windows)下。
