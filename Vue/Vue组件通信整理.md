@@ -139,7 +139,7 @@
 
     ```js
     var children = new Vue({
-      el: "children"
+      el: "#children"
       data: {
         innerValue: 1
       }
@@ -149,3 +149,68 @@
   可以获取到所有内容，自然也不仅限于参数，包括子组件的方法也同样可以调用。往往通过调用子组件的方法，来改变子组件内部的一些参数。这里其实可以看出Vue组件之间的参数、方法互相调用的自由度其实是很高的，尤其是外部组件调用内部组件的方法来操作内部组件的参数，其实很容易造成数据流的混乱或者不安全性。所以对于方法命名时，可以尽可能的将私有方法与公共方法进行命名或者注释上的区分，来保证安全调用与数据通信。
   
   而``$parent``则无需定义类似ref的参数，子组件内自然可以获取到父组件的实例，调用方法与``$ref``类似，这里就不过多赘述。
+
+## 4. provide 与 inject
+
+  > Vue 2.2新增属性，跨层级通信的方式之一，用于属于同一路径，或者说爷孙组件节点间的数据通信
+
+  之前所介绍的三种方式，均为父子组件的通信方法，而在日常开发的场景中，必然会存在跨多级的数据传递。而从本点开始，就开始介绍跨级的数据通信方法。
+ 
+  ``provide``与``inject``为Vue实例的属性之一，类似于一个跨层级的prop。但与prop的区别，除了跨层级以外，还有就是数据是非响应的。也就是说祖辈节点所提供(``provide``)的属性，能被孙辈所接收，但仅能取到第一次所接收的值，如果祖辈节点的数据发生变化，其子节点无法接收到响应变化后的数据。按照Vue中文文档的说法，这是刻意而为之，也许是考虑到如果涉及到的子节点过多，容易导致数据流的混乱。
+
+  * 祖组件部分
+
+  ```js
+  var provider = new Vue({
+    el: "#parent"
+    provide: {
+      foo: 1
+    }
+  })
+  ```
+
+  * 孙组件部分
+
+  ```js
+  var Child = new Vue({
+    inject: ['foo'],
+    created () {
+      console.log(this.foo) // => 1
+    }
+  })
+  ```
+
+  当然，在复杂多变的开发场景下，我们对于数据需要响应变化的情况必然会存在。如果将``provide``部分的数据优化为响应式数据，即可补足响应的功能。在Vue 2.6后，Vue就提供了``observable``方法来将数据转化为响应式数据。这一方法可以用于``provide``中的数据，同样也可以用于VueX中的state的响应。
+
+  * 优化后的祖组件
+
+  ```js
+  import Vue from 'vue'
+  var provider = new Vue({
+    el: "#parent"
+    provide: {
+      foo: Vue.obervable(1)
+    }
+  })
+  
+## 5. VueX 与 LocalStorage
+
+  > 跨层级跨节点通信方式，适用于共用组件较多的数据的通信。
+
+  VueX是Vue的状态管理器，类比与React与Redux，VueX的详细介绍可参考本文档的[VueX的使用](https://xiaobaihaha0001.gitbook.io/tech-share/vue/vuex-de-shi-yong)。
+  
+  而Storage则完全借助浏览器缓存的功能来达到存储传递全局或是作用域较广的变量的效果。理解与使用起来都比较容易。
+
+  ```js
+  // 存储
+  window.localStorage.setItem('prop', param);
+
+  // 使用
+  window.localStorage.getItem('prop');
+  ```
+
+## 6. vm.$attrs 与 vm.$listeners
+
+  > Vue 2.4 中新增的API，用于跨层级跨节点间的数据通信，适用于共用组件比较少的数据。对比与VueX
+
+## 7. EventBus(总线模式)
