@@ -122,6 +122,7 @@
 * [vue2.x-zhi-ling.md](https://github.com/fff455/tech-share/tree/master/vue/vue2.x-zhi-ling.md) 2020-11-15 update.
 * [vuecli2-xiang-mu-jie-gou-fen-xi.md](https://github.com/fff455/tech-share/tree/master/vue/vuecli2-xiang-mu-jie-gou-fen-xi.md) 2020-11-15 update.
 * [vuex-de-shi-yong.md](https://github.com/fff455/tech-share/tree/master/vue/vuex-de-shi-yong.md) 2020-11-15 update.
+* [NCF算法与简单MF的对比.md](https://github.com/fff455/tech-share/tree/master/MachineLearning/NCF算法与简单MF的对比.md) 2020-11-15 update.
 <!-- NEW CONTENT-END -->
 
 > 更多内容或者加入我们，欢迎关注我们的公众号  
