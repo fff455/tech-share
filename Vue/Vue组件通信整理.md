@@ -192,6 +192,7 @@
       foo: Vue.obervable(1)
     }
   })
+  ```
   
 ## 5. VueX 与 LocalStorage
 
@@ -211,6 +212,157 @@
 
 ## 6. vm.$attrs 与 vm.$listeners
 
-  > Vue 2.4 中新增的API，用于跨层级跨节点间的数据通信，适用于共用组件比较少的数据。对比与VueX
+  > Vue 2.4 中新增的API，用于跨层级跨节点间的数据通信，适用于共用组件比较少的数据，对比于VueX。
+
+  ### vm.$attrs
+
+  ``Vue.js``中文文档对于这``$attrs``的说明如下
+
+  * ``vm.$attrs``: 包含了父作用域中不作为 ``prop`` 被识别 (且获取) 的 ``attribute`` 绑定 (``class`` 和 ``style`` 除外)。当一个组件没有声明任何 ``prop`` 时，这里会包含所有父作用域的绑定 (``class`` 和 ``style`` 除外)，并且可以通过 ``v-bind="$attrs"`` 传入内部组件。
+
+  可以看出中文文档的描述还是比较抽象和书面化的，那么用代码的形式来理解一下，我们先简单构建一组父子组件。
+
+  * 父组件部分
+
+    ```html
+    <template>
+      <child
+        :key1="key1"
+        :key2="key2"
+        :key3="key3"
+        :style="styleKey"
+        :class="classKey" 
+      >
+    </template>
+    ```
+
+    ```js
+    var parent = new Vue({
+      el: '#parent',
+      data() {
+        return {
+          key1: 1
+          key2: 2
+          key3: 3
+          style: 'margin-top: 10px'
+          class: 'classKey'
+        }
+      }
+    })
+    ```
+
+  * 子组件部分
+
+    ```js
+    var child = new Vue({
+      el: '#child',
+      props: {
+        key1: String,
+      }
+      mounted() {
+        console.log('child vm.$attrs:', this.$attrs); // "child vm.$attrs: { key2: 2, key3: 3 }"
+      }
+    })
+    ```
+
+  父作用域中的``attribute``其实就是子组件中由父组件传入而又不在``props``中记录的数据。这部分的数据在``Vue``中其实在``2.4.0``以前就会将其记录在dom当中，我们可以看一下dom结构。
+
+  ![attrsdom](./image/attrsdom.png)
+
+  而在引入了``$attrs``之后，就将相当于在Vue实例中提供了一个属性用于存储这一部分的数据。在子组件的``mounted``部分输出``this.$attrs``，可以看到``key2``与``key3``两对键值.与此同时，也可以注意到``class``与``style``两个字段也没有被记录到``$attrs``当中。至此，通过代码，我们就可以充分理解``$attrs``的含义了。联想到其本质用途———用于小范围内跨组件传递参数。单在父子组件间传递的参数，会通过props记录，而跨组件部分的参数，就会以``$attrs``属性，通过子组件传递至子组件的子组件(下称孙组件)。那么扩写一下子组件与孙组件。
+
+  * 子组件部分
+
+    ```html
+    <template>
+      <child-child v-bind="$attrs" />
+    </template>
+    ```
+
+  * 孙组件部分
+
+    ```js
+    var childchild = new Vue({
+      el: '#childchild',
+      inheritAttrs: false,
+      mounted() {
+        console.log('child-child vm.$attrs:', this.$attrs); // "child-child vm.$attrs: { key2: 2, key3: 3 }"
+      }
+    })
+    ```
+
+  这样就成功的将父组件中的属性通过子组件``$attrs``转发，传递至孙组件。
+
+  补充：如果不想要在dom中暴露跨组件传递的参数，``Vue``也提供了对应的属性配合``$attrs``使用，在子组件中设置``inheritAttrs: false``即可。
+
+  ![attrsdom2](./image/attrsdom2.png)
+
+
+  ### $vm.$listeners
+
+  ``$attrs``之后再看``$listeners``就比较好理解了。依旧先看中文文档的说明。
+
+  ``vm.$listeners``: 包含了父作用域中的 (不含 ``.native`` 修饰器的) ``v-on`` 事件监听器。它可以通过 ``v-on="$listeners"`` 传入内部组件——在创建更高层次的组件时非常有用。
+
+  对比于``props``和``$emit``，``$listeners``就是通过跨组件传递绑定事件，来实现孙组件至父组件的参数回传。那么再次扩写父、子、孙三代组件。
+
+  * 父组件部分
+
+    ```html
+    <template>
+      <child @on-listen="handleListen"/>
+    </template>
+    ```
+  
+    ```js
+    var parent = new Vue({
+      el: '#parent',
+      components: { Child }
+      methods: {
+        handleListen(arg) {
+          console.log('parent on-listen:', arg);
+        }
+      }
+    })
+    ```
+  
+  * 子组件部分
+
+    ```html
+    <template>
+      <child-child v-bind="$attrs" v-on="$listeners" />
+    </template>
+    ```
+
+    ```js
+    var child = new Vue({
+      el: '#child',
+      inheritAttrs: false,
+      components: { ChildChild },
+      mounted() {
+        console.log('child vm.$attrs:', this.$attrs);
+        console.log('cihld vm.$listeners:', this.$listeners);
+      },
+    })
+    ```
+
+    * 孙组件部分
+
+    ```js
+    var childchild = new Vue({
+      el: '#childchild',
+      inheritAttrs: false,
+      mounted() {
+        console.log('child-child vm.$attrs:', this.$attrs);
+        console.log('cihld-child vm.$listeners:', this.$listeners);
+        this.$emit('on-listen', 'callback'); // 对应于父组件中的on-listen事件
+      }
+    })
+    ```
+
+  * 查看输出结果，我们可以看到孙组件中通过``on-listen``事件返回的参数，成功在父组件中进行了输出。
+
+    ![listenconsole](./image/listenconsole.png)
+
 
 ## 7. EventBus(总线模式)
