@@ -1,8 +1,7 @@
-
 # tech-share
 
-<!-- RECORD-START -->
 ## Record
+
 * [AR](https://github.com/fff455/tech-share/tree/master/AR)
 * [Books](https://github.com/fff455/tech-share/tree/master/Books)
 * [CSS](https://github.com/fff455/tech-share/tree/master/CSS)
@@ -16,20 +15,17 @@
 * [Vue](https://github.com/fff455/tech-share/tree/master/Vue)
 * [可视化](https://github.com/fff455/tech-share/tree/master/可视化)
 * [跨端](https://github.com/fff455/tech-share/tree/master/跨端)
-<!-- RECORD-END -->
 
-<!-- MEMBER-START -->
 ## Member
+
 * [RedOvO](https://github.com/RedOvO)
 * [xiaobaiha](https://github.com/xiaobaiha)
 * [wxyhhh](https://github.com/wxyhhh)
-<!-- MEMBER-END -->
 
-<!-- NEW CONTENT-START -->
 ## New Content
+
 * [Git.md](https://github.com/fff455/tech-share/tree/master/Engineering/Git.md) 2020-11-08 update.
-<!-- NEW CONTENT-END -->
 
 > 更多内容或者加入我们，欢迎关注我们的公众号  
-> ![123](./Books/image/gzh.png)
+> ![123](.gitbook/assets/gzh.png)
 
