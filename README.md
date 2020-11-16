@@ -124,6 +124,7 @@
 * [vuex-de-shi-yong.md](https://github.com/fff455/tech-share/tree/master/vue/vuex-de-shi-yong.md) 2020-11-15 update.
 * [NCF算法与简单MF的对比.md](https://github.com/fff455/tech-share/tree/master/MachineLearning/NCF算法与简单MF的对比.md) 2020-11-15 update.
 * [现代计算机图形学基础.md](https://github.com/fff455/tech-share/tree/master/可视化/现代计算机图形学基础.md) 2020-11-15 update.
+* [图嵌入.md](https://github.com/fff455/tech-share/tree/master/MachineLearning/图嵌入.md) 2020-11-16 update.
 <!-- NEW CONTENT-END -->
 
 > 更多内容或者加入我们，欢迎关注我们的公众号  
