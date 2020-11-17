@@ -1,6 +1,8 @@
+# Chrome-devtools
+
 ## `$0` / `$1` / `$2` ...
 
-在 element 中单击一个节点，在 console 中输入$0 即可显示选中的节点,$1 则表示在\$0 之前选择的元素，以此类推
+在 element 中单击一个节点，在 console 中输入$0 即可显示选中的节点,$1 则表示在$0 之前选择的元素，以此类推
 
 ## `$_`
 
@@ -10,9 +12,9 @@
 
 ## `copy()`
 
-通过 copy(xxx) 方法在控制台里复制你想要的东西，例如
+通过 copy\(xxx\) 方法在控制台里复制你想要的东西，例如
 
-```jaascript
+```text
 copy($_)
 ```
 
@@ -71,7 +73,7 @@ Array(10)
 
 输出
 
-```
+```text
 test count: 1
 test count: 2
 test count: 3
@@ -95,3 +97,4 @@ test count: 10
 ## `debugger`
 
 在源码中写`debugger`可以定义一个断点，能够直接在 source 中运行到此断点并暂停
+

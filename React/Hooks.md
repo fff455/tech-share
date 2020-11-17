@@ -58,7 +58,7 @@ const Header = ({ title, subTitle }) => {
 
 `useEffect` 接收两个参数，第一个参数为一个函数，第二个参数为一个依赖的数组，当第二个参数中的数组的值发生改变时，会执行第一个参数的函数。 `useEffect` 默认第一次渲染也会执行。
 
-- componentDidMount / componentDidUpdate 都需要执行的逻辑
+* componentDidMount / componentDidUpdate 都需要执行的逻辑
 
 `useEffect`也可以不接受第二个参数，它会在每次重新渲染中都会执行一遍，也就是无论是 Props 或者是内部状态的改变，都会进行重新执行。所以在第二个参数为空的情况下，可以模拟 componentDidMount 和 componentDidUpdate 都需要执行的一些逻辑。
 
@@ -68,7 +68,7 @@ useEffect(() => {
 });
 ```
 
-- componentDidMount
+* componentDidMount
 
 由于`useEffect` 默认第一次渲染也会执行，所以只需要第二个参数为空数组即可模拟 componentDidMount。
 
@@ -78,7 +78,7 @@ useEffect(() => {
 }, []);
 ```
 
-- componentDidUpdate
+* componentDidUpdate
 
 `useRef`可以创建一个 ref，这个往往是用作来创建 DOM 的 Ref，但是在这里也可以借助它来作为一个函数的成员变量来标示是否是 Update 阶段。
 
@@ -113,3 +113,4 @@ render() {
 const contextValue = useContext(Context);
 return <div>{contextValue}</div>;
 ```
+

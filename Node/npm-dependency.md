@@ -18,7 +18,7 @@ yarn add A
 
 假设我们在开发的是项目 A，A 的 package.json 如下：
 
-```json
+```javascript
 {
   "name": "A",
   "dependencies": {
@@ -59,7 +59,7 @@ bundleDependencies 同 bundledDependencies，这个配置的作用如下：
 
 假设项目 A 的 package.json 如下
 
-```json
+```javascript
 {
   "name": "A",
   "dependencies": {
@@ -70,9 +70,9 @@ bundleDependencies 同 bundledDependencies，这个配置的作用如下：
 }
 ```
 
-项目的 node_modules 的文件结构为：
+项目的 node\_modules 的文件结构为：
 
-```
+```text
 ├── node_modules
  └── A
  └── B
@@ -82,7 +82,7 @@ bundleDependencies 同 bundledDependencies，这个配置的作用如下：
 
 如果使用 bundleDependencies，
 
-```json
+```javascript
 {
   "name": "A",
   "dependencies": {
@@ -94,9 +94,9 @@ bundleDependencies 同 bundledDependencies，这个配置的作用如下：
 }
 ```
 
-项目的 node_modules 的文件结构为：
+项目的 node\_modules 的文件结构为：
 
-```
+```text
 ├── node_modules
  └── A
   └── node_modules
@@ -105,8 +105,9 @@ bundleDependencies 同 bundledDependencies，这个配置的作用如下：
  └── D
 ```
 
-bundleDependencies 的作用就是在用户安装了项目之后，将项目所声明的依赖包汇总到项目自身的 node_modules 下，便于用户管理。
+bundleDependencies 的作用就是在用户安装了项目之后，将项目所声明的依赖包汇总到项目自身的 node\_modules 下，便于用户管理。
 
 ## optionalDependencies
 
 如果你的 node 项目依赖了一个包 package-optional，假如这个 package-optional 没有安装，你仍然想让程序正常执行，这个时候 optionalDependencies 就非常适合你这个需求，optionalDependencies 跟 dependencies 声明方式完全一致，而且一个依赖如果同时在 dependencies 和 optionalDependencies 中声明，option 还会覆盖 dependencies 的声明。optionalDependencies 一个使用的场景为项目 A 本身引入了某些项目 ts 的 type 包，但是在将这个项目 A 为依赖的项目里没有引入这些 type 包，那么如果直接作为 dependencies 的话，使用项目 A 的项目会因为缺少类型定义而报错，但是实际情况是即使 ts 定义不完善，也能够使用项目 A，这时，type 等包就应该作为项目 A 的 optionalDependencies。
+

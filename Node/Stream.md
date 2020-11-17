@@ -2,9 +2,7 @@
 
 ## 概念
 
-Stream 是 Node.js 中最重要的组件和模式之一，流是一组有序的，有起点和终点的字节数据传输手段，它是一个抽象的接口。
-流是数据的集合，区别在于流中的数据可能不会立刻就全部可用，并且你无需一次性地把这些数据全部放入内存。这使得流在操作大量数据或是数据从外部来源逐段发送过来的时候变得非常有用。
-每一个流对象都是 EventEmitter 类的一个实例，都有相应的 on 和 emit 方法
+Stream 是 Node.js 中最重要的组件和模式之一，流是一组有序的，有起点和终点的字节数据传输手段，它是一个抽象的接口。 流是数据的集合，区别在于流中的数据可能不会立刻就全部可用，并且你无需一次性地把这些数据全部放入内存。这使得流在操作大量数据或是数据从外部来源逐段发送过来的时候变得非常有用。 每一个流对象都是 EventEmitter 类的一个实例，都有相应的 on 和 emit 方法
 
 stream 是 node 的核心模块，引入方式如下：
 
@@ -40,11 +38,11 @@ readable.on("data", chunk => {
 });
 ```
 
-![](./images/readable.png)
+![](../.gitbook/assets/readable.png)
 
 资源的数据流并不是直接流向消费者，而是先 push 到缓存池，缓存池有一个水位标记 highWatermark，超过这个标记阈值，push 的时候会返回 false，什么场景下会出现这种情况呢？
 
-1. 消费者主动执行了 .pause()
+1. 消费者主动执行了 .pause\(\)
 2. 消费速度比数据 push 到缓存池的生产速度慢
 
 有个专有名词来形成这种情况，叫做「背压」，Writable Stream 也存在类似的情况。
@@ -55,9 +53,9 @@ readable.on("data", chunk => {
 
 暂停模式，这是 Stream 的预设模式，Stream 实例的 \_readableState.flow 有三个状态，分别是：
 
-- \_readableState.flow = null，暂时没有消费者过来
-- \_readableState.flow = false，主动触发了 .pause()
-- \_readableState.flow = true，流动模式
+* \_readableState.flow = null，暂时没有消费者过来
+* \_readableState.flow = false，主动触发了 .pause\(\)
+* \_readableState.flow = true，流动模式
 
 当我们监听了 onreadable 事件后，会进入这种模式，比如：
 
@@ -67,11 +65,11 @@ myReadable.setEncoding("utf8");
 myReadable.on("readable", () => {});
 ```
 
-监听 readable 的回调函数第一个参数不会传递内容，需要我们通过 myReadable.read() 主动读取
+监听 readable 的回调函数第一个参数不会传递内容，需要我们通过 myReadable.read\(\) 主动读取
 
-![](./images/non-flowing.png)
+![](../.gitbook/assets/non-flowing.png)
 
-资源池会不断地往缓存池输送数据，直到 highWaterMark 阈值，消费者监听了 readable 事件并不会消费数据，需要主动调用 .read([size]) 函数才会从缓存池取出，并且可以带上 size 参数，用多少就取多少
+资源池会不断地往缓存池输送数据，直到 highWaterMark 阈值，消费者监听了 readable 事件并不会消费数据，需要主动调用 .read\(\[size\]\) 函数才会从缓存池取出，并且可以带上 size 参数，用多少就取多少
 
 只要数据达到缓存池都会触发一次 readable 事件，有可能出现「消费者正在消费数据的时候，又触发了一次 readable 事件，那么下次回调中 read 到的数据可能为空」的情况。我们可以通过 \_readableState.buffer 来查看缓存池到底缓存了多少资源
 
@@ -95,7 +93,7 @@ myReadable.on("readable", chunk => {
 
 数据流过来的时候，会直接写入到资源池，当写入速度比较缓慢或者写入暂停时，数据流会进入队列池缓存起来
 
-![](./images/writable.png)
+![](../.gitbook/assets/writable.png)
 
 当生产者写入速度过快，把队列池装满了之后，就会出现「背压」，这个时候是需要告诉生产者暂停生产的，当队列释放之后，Writable Stream 会给生产者发送一个 drain 消息，让它恢复生产。
 
@@ -113,7 +111,7 @@ readable 通过 pipe（管道）传输给 writable
 
 双工的意思，它的输入和输出可以没有任何关系
 
-![](./images/duplex.png)
+![](../.gitbook/assets/duplex.png)
 
 Duplex Stream 实现特别简单，它继承了 Readable Stream，并拥有 Writable Stream 的方法，它的 read 和 write 是两个管道，彼此互不干扰
 
@@ -123,4 +121,5 @@ Transform Stream 集成了 Duplex Stream，它同样具备 Readable 和 Writable
 
 Transform 的处理就是通过 \_transform 函数将 Duplex 的 Readable 连接到 Writable，由于 Readable 的生产效率与 Writable 的消费效率是一样的，所以这里 Transform 内部不存在「背压」问题，背压问题的源头是外部的生产者和消费者速度差造成的
 
-![](./images/transform.png)
+![](../.gitbook/assets/transform.png)
+
