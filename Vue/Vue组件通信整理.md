@@ -366,3 +366,66 @@
 
 
 ## 7. EventBus(总线模式)
+
+Vue的总线模式，是一个自由度比较高的数据传递模式，可以说是VueX的前身。简单描述下就好比一个传送带，上面有着各类不同组件上传的数据。而其他组件也可以从传送带上获取到数据。
+
+那么直接来看如何使用总线模式。总线模式创建，需要在Vue实例中引入一个新的Vue实例。而该实例可以视作一个不具有组件功能的实例。
+
+* 单文件引入总线模式
+
+  ```js
+  // event-bus.js
+  import Vue from 'vue'
+  const eventBus = new Vue()
+  ```
+
+* 入口文件引入总线模式
+
+  ```js
+  // main.js event-bus
+  import Vue from 'vue'
+  Vue.prototype.$EventBus = new Vue()
+  ```
+
+创建完实例，意味着当前组件实例已经加入到总线模式当中。总线模式下没有必要将组件看成一个树状解构，所有组件都处于一个平等的状态，通过总线模式对应的事件，就能够实现数据的传递。
+
+* 发送组件
+
+  ```js
+  // a-comp
+  import { eventBus } from 'event-bus.js'
+  var send = new Vue({
+    el: 'a-comp',
+    mounted() {
+      this.$emit('send-from-a', 'This msg sent from a-component');
+    }
+  })
+  ```
+
+* 接收组件
+
+  ```js
+  import { eventBus } from 'event-bus.js'
+  var receive = new Vue({
+    el: 'b-comp',
+    mounted() {
+      this.$on('send-from-a', (msg) => {
+        console.log(msg); // 'This msg sent from a-component'
+      })
+    }
+  })
+  ```
+
+通过代码，很容易看出总线模式是一种十分方便的组件通信方法，不过由于自由度过高，过度使用亦或是使用不慎的情况下，很容易造成数据流的混乱，所以已经逐渐被VueX这类易于管理的状态管理模式所取代。
+
+另外，Vue作为单页面应用所广泛使用的前端框架，当界面进行刷新的时候，总线模式就会被更新，进而无法完成一些业务操作。故在进行使用时，需要处理好总线销毁事件。
+
+  ```js
+  import { eventBus } from './event-bus.js'
+  EventBus.$off('send-from-a')
+  ```
+
+## 总结
+
+本文一共对七种Vue中可作为组件数据通信的方法进行了整理。简单的数据传递有如``v-bind``与``vm.$emit()``方法，也有跨组件传输所使用的``$attrs``与``$listeners``。对于单页面多组件应用来说，在组件间保持一个健康可控的数据流非常重要。需要能够在不同场景下正确的使用这些传递方法。
+
