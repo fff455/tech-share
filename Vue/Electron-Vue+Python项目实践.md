@@ -2,31 +2,31 @@
 
 ## 需求与设计背景
 
-对接部门内的某个产品A，为客户提供一个配套的桌面应用小工具B。主要要求概括如下：
+对接部门内的某个产品 A，为客户提供一个配套的桌面应用小工具 B。主要要求概括如下：
 
-* 工具B主要用于作为测试工具，对产品内部的数据进行校验，减少因为版本迭代而产生的非易现bug；
+* 工具 B 主要用于作为测试工具，对产品内部的数据进行校验，减少因为版本迭代而产生的非易现 bug；
 
-* 通过调用产品A提供的服务接口，获取工具B所需的数据；
+* 通过调用产品 A 提供的服务接口，获取工具 B 所需的数据；
 
-* 工具B本身需要使用python的一些金融算法库，对通过产品A接口获取到的数据进行处理；
+* 工具 B 本身需要使用 python 的一些金融算法库，对通过产品 A 接口获取到的数据进行处理；
 
-* 工具B需要提供一个可视化界面的版本与一个命令行执行版本；
+* 工具 B 需要提供一个可视化界面的版本与一个命令行执行版本；
 
-* 客户本地无任何开发环境，也不可安装配置开发环境，如python开发环境；
+* 客户本地无任何开发环境，也不可安装配置开发环境，如 python 开发环境；
 
 * 最终输出为一个可安装的桌面可执行程序。
 
 ## 架构设想
 
-对需求进行分析后，结合技术可行性与人员配置，时间安排等方面的问题，工具B整体架构设计如下。
+对需求进行分析后，结合技术可行性与人员配置，时间安排等方面的问题，工具 B 整体架构设计如下。
 
 ![framework](./image/framework.jpg)
 
-* 工具B整体分为客户端与服务端两个部分，最终成型为一个可执行exe文件；
+* 工具 B 整体分为客户端与服务端两个部分，最终成型为一个可执行 exe 文件；
 
-* 为了提高前端界面交互的美观度、自由度，同时也考虑到人员配置的可行性，客户端部分采用``electron``框架，前端通过``Vue``进行开发。并通过``Electron-builder``进行打包，输出可执行文件；
+* 为了提高前端界面交互的美观度、自由度，同时也考虑到人员配置的可行性，客户端部分采用`electron`框架，前端通过`Vue`进行开发。并通过`Electron-builder`进行打包，输出可执行文件；
 
-* 服务端部分通过``python``打包库``pyinstaller``打包形成可执行文件，服务端打包生成的exe文件本身可以单独运行，通过命令行进行交互。后端框架以及涉及到的其他python库需要后端开发进行后续敲定；
+* 服务端部分通过`python`打包库`pyinstaller`打包形成可执行文件，服务端打包生成的 exe 文件本身可以单独运行，通过命令行进行交互。后端框架以及涉及到的其他 python 库需要后端开发进行后续敲定；
 
 * 服务端可执行文件通过``Electron-builder``的``extraResources``配置成为一个静态文件打包入整个客户端可执行文件。所谓的静态文件，即在打包完成后，可以直接在工具B根目录下的``extraResources``中访问服务端可执行程序(可行性待验证)；
 
@@ -125,24 +125,32 @@
   function createWindow() {
     // ...
     // 使用process.cwd获取当前运行程序的根目录
-    let execFilePath = path.join(process.cwd(), '/SocketHttpService','SocketHttpService.exe') // 开发环境运行路径
-    if (process.env.NODE_ENV === 'production') {
-      execFilePath = path.join(process.cwd(), '/resources/SocketHttpService','SocketHttpService.exe') // 生产环境运行路径
+    let execFilePath = path.join(
+      process.cwd(),
+      "/SocketHttpService",
+      "SocketHttpService.exe"
+    ); // 开发环境运行路径
+    if (process.env.NODE_ENV === "production") {
+      execFilePath = path.join(
+        process.cwd(),
+        "/resources/SocketHttpService",
+        "SocketHttpService.exe"
+      ); // 生产环境运行路径
     }
     console.log(execFilePath);
     // fs.stat检测路径是否存在
-    fs.stat(execFilePath, err => {
-      if(err) {
-        console.log('path error')
+    fs.stat(execFilePath, (err) => {
+      if (err) {
+        console.log("path error");
       } else {
-        console.log("start running back-end")
+        console.log("start running back-end");
         child = execFile(execFilePath, (err, stdout, stderr) => {
-          console.log('Err:', err);
-          console.log('StdOut:', stdout);
-          console.log('StdErr:', stderr);
-        })
+          console.log("Err:", err);
+          console.log("StdOut:", stdout);
+          console.log("StdErr:", stderr);
+        });
       }
-    })
+    });
   }
   ```
 
@@ -150,31 +158,30 @@
 
   ![backend](./image/backend.png)
 
-* 由于``electron-app``与服务端程序本就属于两个进程，所以在停止运行前端窗口时，服务端进程不会被自动杀死，所以需要在窗口关闭时将服务端进程关闭，可以在窗口关闭的监听事件中补写进程杀死逻辑。关闭后，查看任务管理器，可以发现服务端程序已被关闭。
+* 由于`electron-app`与服务端程序本就属于两个进程，所以在停止运行前端窗口时，服务端进程不会被自动杀死，所以需要在窗口关闭时将服务端进程关闭，可以在窗口关闭的监听事件中补写进程杀死逻辑。关闭后，查看任务管理器，可以发现服务端程序已被关闭。
 
   ```js
-  app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-      app.quit()
-      child.kill()
+  app.on("window-all-closed", () => {
+    if (process.platform !== "darwin") {
+      app.quit();
+      child.kill();
     }
-  })
+  });
   ```
 
 * 那么本地运行都顺利之后，我们重新打包代码，重新安装并运行打包后程序，此时查看任务管理器，可以发现服务端程序依旧正确运行。至此，前后端本地运行部分已经都已实现并验证完成。
 
-* 当前后端都能正确运行后，使用HTTP协议进行通信即可。对于前端部分来说，``Electron-vue``脚手架除开``electron``部分，本身就可以认为是一个``vue-cli``项目，在安装的时候也会提示增加``axios``依赖。增加依赖后，进行全局挂载便能调用服务程序提供的接口。
+* 当前后端都能正确运行后，使用 HTTP 协议进行通信即可。对于前端部分来说，`Electron-vue`脚手架除开`electron`部分，本身就可以认为是一个`vue-cli`项目，在安装的时候也会提示增加`axios`依赖。增加依赖后，进行全局挂载便能调用服务程序提供的接口。
 
   ```js
   // Vue实例入口处进行挂载
-  import axios from 'axios'
+  import axios from "axios";
   Vue.prototype.$http = axios;
 
   // 接口调用处进行使用
-  this.$http.post(url, param)
-    .then(res => {
-      // ...
-    })
+  this.$http.post(url, param).then((res) => {
+    // ...
+  });
   ```
 
 ### 自定义窗口
@@ -184,4 +191,3 @@
 * 而C端的外壳与B端的内核放在操作系统中来说，``Electron``将其转化为了两个进程。一个主进程，控制程序外壳本身，使用操作系统原生的功能，包括提供窗口，窗口的拖动、放大缩小、开闭等。另一个为渲染进程，主要负责浏览器内核对于主页面部分的渲染。这在代码中正好对应了``main.js``与``render.js``两份代码。在W3C提供的[``Electron``中文文档](https://www.w3cschool.cn/electronmanual/)中，也可以找到主进程与渲染进程两个模块所拥有的API。
 
 * 当打包完成的应用在Windows上运行时，能够看到包括最小化、关闭等Windows原生的窗口按钮，以及菜单栏等功能。而一些常见的``electron``应用，如网易云音乐、VSCode等，窗口菜单都与原生菜单大相径庭。通过使用其菜单的功能后能够发现，菜单的本质还是Windows原生的菜单的样式修改，那么通过使用主进程提供的API，即可完成一个窗口的样式自定义。
-
