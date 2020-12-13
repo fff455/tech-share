@@ -22,8 +22,7 @@
 
 ## Prettier配置
 
-* 配置``.prettierrc``以规范代码风格，配置内容如下。配置完成后，通过``Prettier``插件在保存文件时，自动完成代码格式化。
-
+* 配置``.prettierrc``以规范代码风格，配置内容如下。配置完成后，vscode开启配置，通过``Prettier``插件在保存文件时，自动完成代码格式化。
   ```
   {
     "tabWidth": 2, // 缩进空格为2，
@@ -70,7 +69,7 @@
       ],
       rules: {
         // ...
-        '@typescript-eslint/no-explicit-any': 'error', // 显示any类型定义报错
+        '@typescript-eslint/no-explicit-any': 'error', // 显式any类型定义报错
         '@typescript-eslint/no-unused-expressions': ['error'], // 未使用变量报错
       },
     }
