@@ -108,9 +108,65 @@
     }
     ```
 
-## stylelint配置
-
 ## Lint-staged配置
 
+* 安装``husky``
 
+  ```shell
+  $ yarn add -D husky
+  ```
+
+* ``pre-commit``配置与验证，``package.json``增加``pre-commit``的``git-hook``
+
+  ```json
+  "husky": {
+    "hook": {
+      "pre-commit": "echo \"git commit trigger husky pre-commit hook\" "
+    }
+  }
+  ```
+
+* ``commit``本地更新后，``pre-commit``成功触发
+
+  ![husky](./image/husky.png)
+
+* 安装``lint-staged``
+
+  ```shell
+  yarn add -D lint-staged
+  ```
+
+* ``package.json``增加``lint-staged``的配置用于检测ts与vue文件，并在``pre-commit``中增加``lint-staged``执行命令
+
+  ```json
+  "husky": {
+    "hook": {
+      "pre-commit": "echo \"git commit trigger husky pre-commit hook\" & lint-staged "
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{ts,vue}": [
+      "prettier --write",
+      "eslint --cache --fix"
+    ]
+  },
+  ```
+
+* 对``lint-staged``功能进行验证。设置vscode，关闭on save时的代码自动格式化，编写一行不符合格式规范的代码，这里使用不带分号的代码进行验证。
+
+  ```ts
+  // main.ts
+  import Vue from 'vue' // 无分号
+  ```
+
+* ``commit``代码触发``pre-commit``中的``lint-staged``命令，代码被``prettier``与``eslint``自动格式化，原无分号的代码已经自动增加分号
+
+  ![lint-staged](./image/lint-staged.png)
+
+  ```ts
+  // main.ts
+  import Vue from 'vue';
+  ```
+
+## stylelint配置
 
