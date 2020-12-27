@@ -108,7 +108,82 @@
     }
     ```
 
+## stylelint配置
+
+> 配置``stylelint``实现样式代码的规范化。
+
+* 安装依赖
+
+  * stylelint
+
+    ```shell
+    $ yarn -D stylelint stylelint-config-stylelint
+    ```
+
+  * scss插件
+
+    ```shell
+    $ yarn -D stylelint-scss
+    ```
+
+  * 样式规则排序
+
+    ```shell
+    $ yarn -D stylelint-order
+    ```
+
+* 增加``stylelint``配置
+
+  ```js
+  // .stylelintrc.js
+  module.exports = {
+    extends: 'stylelint-config-standard',
+    plugins: [
+      'stylelint-order',
+      'stylelint-scss',
+    ],
+    rules: {
+      'color-no-invalid-hex': true, // 禁止无效十六进制颜色
+      'property-no-unknown': true, // 禁止unknown属性
+      'string-no-newline': true, // 禁止字符串类属性换行
+      'unit-no-unknown': true, // 禁止unknown样式单位
+      'order/order': [
+        'declarations',
+        'custom-properties',
+        'dollar-variables',
+        'rules',
+        'at-rules'
+      ],
+      'order/properties-order': [
+        // 自定义样式规则顺序
+      ]
+    }
+  }
+  ```
+
+* 上述配置中，``order/order``中的顺序样例
+
+  ```css
+  a {
+    /* declaration */
+    --width: 10px;
+    /* custom-properties */
+    $height: 20px;
+    /* dollar-variables */
+    display: none;
+    /* rules */
+    span {}
+    /* at-rules */
+    @media (min-width: 100px) {}
+  }
+  ```
+
+* stylelint至此已经能够正确生效。
+
+
 ## Lint-staged配置
+
+> 通过``lint-staged``在代码commit前对代码规范进行检测，防止非规范代码递交。
 
 * 安装``husky``
 
@@ -148,6 +223,7 @@
     "src/**/*.{ts,vue}": [
       "prettier --write",
       "eslint --cache --fix"
+      "stylelint src/**/*.{html,vue,css,sass,scss} --fix}" // stylelint检测
     ]
   },
   ```
@@ -168,5 +244,8 @@
   import Vue from 'vue';
   ```
 
-## stylelint配置
+## lint-staged tsc
+
+> 在lint-staged中增加TypeScript的检测
+
 
