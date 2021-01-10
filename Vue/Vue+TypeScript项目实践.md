@@ -110,7 +110,152 @@
 
 ## stylelint配置
 
+> 配置``stylelint``实现样式代码的规范化。
+
+* 安装依赖
+
+  * stylelint
+
+    ```shell
+    $ yarn -D stylelint stylelint-config-stylelint
+    ```
+
+  * scss插件
+
+    ```shell
+    $ yarn -D stylelint-scss
+    ```
+
+  * 样式规则排序
+
+    ```shell
+    $ yarn -D stylelint-order
+    ```
+
+* 增加``stylelint``配置
+
+  ```js
+  // .stylelintrc.js
+  module.exports = {
+    extends: 'stylelint-config-standard',
+    plugins: [
+      'stylelint-order',
+      'stylelint-scss',
+    ],
+    rules: {
+      'color-no-invalid-hex': true, // 禁止无效十六进制颜色
+      'property-no-unknown': true, // 禁止unknown属性
+      'string-no-newline': true, // 禁止字符串类属性换行
+      'unit-no-unknown': true, // 禁止unknown样式单位
+      'order/order': [
+        'declarations',
+        'custom-properties',
+        'dollar-variables',
+        'rules',
+        'at-rules'
+      ],
+      'order/properties-order': [
+        // 自定义样式规则顺序
+      ]
+    }
+  }
+  ```
+
+* 上述配置中，``order/order``中的顺序样例
+
+  ```css
+  a {
+    /* declaration */
+    --width: 10px;
+    /* custom-properties */
+    $height: 20px;
+    /* dollar-variables */
+    display: none;
+    /* rules */
+    span {}
+    /* at-rules */
+    @media (min-width: 100px) {}
+  }
+  ```
+
+* stylelint至此已经能够正确生效。
+
+
 ## Lint-staged配置
 
+> 通过``lint-staged``在代码commit前对代码规范进行检测，防止非规范代码递交。
+
+* 安装``husky``
+
+  ```shell
+  $ yarn add -D husky
+  ```
+
+* ``husky``能够为``git``增加``git hook``，使我们可以在对应的钩子下增加我们需要的命令，``lint-staged``的功能就是在``pre-commit``这个钩子的阶段，增加对暂存区代码规范性的检测，防止不符合代码规范的代码进行递交。
+
+* ``pre-commit``配置与验证，``package.json``增加``pre-commit``的``git-hook``
+
+  ```json
+  "husky": {
+    "hook": {
+      "pre-commit": "echo \"git commit trigger husky pre-commit hook\" "
+    }
+  }
+  ```
+
+* ``commit``本地更新后，``pre-commit``成功触发
+
+  ![husky](./image/husky.png)
+
+* 安装``lint-staged``
+
+  ```shell
+  yarn add -D lint-staged
+  ```
+
+* ``package.json``增加``lint-staged``的配置用于检测ts与vue文件，并在``pre-commit``中增加``lint-staged``执行命令
+
+  ```json
+  "husky": {
+    "hook": {
+      "pre-commit": "lint-staged "
+    }
+  },
+  ```
+
+* 新增``lint-staged``配置文件
+
+  ```js
+  // lint-staged.config.js
+  module.exports = {
+    'src/**/*.{ts,vue}': filenames => {
+      return [
+        'eslint --cache --quiet',
+        'prettier --write',
+        'stylelint src/**/*.{html,vue,css,sass,scss} --fix', // stylelint检测
+      ];
+    },
+  };
+  ```
+
+* 对``lint-staged``功能进行验证。设置vscode，关闭on save时的代码自动格式化，编写一行不符合格式规范的代码，这里使用不带分号的代码进行验证。
+
+  ```ts
+  // main.ts
+  import Vue from 'vue' // 无分号
+  ```
+
+* ``commit``代码触发``pre-commit``中的``lint-staged``命令，代码被``prettier``与``eslint``自动格式化，原无分号的代码已经自动增加分号
+
+  ![lint-staged](./image/lint-staged.png)
+
+  ```ts
+  // main.ts
+  import Vue from 'vue';
+  ```
+
+## lint-staged tsc
+
+> 在lint-staged中增加TypeScript的检测
 
 
