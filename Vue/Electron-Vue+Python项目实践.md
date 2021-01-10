@@ -190,4 +190,131 @@
 
 * 而C端的外壳与B端的内核放在操作系统中来说，``Electron``将其转化为了两个进程。一个主进程，控制程序外壳本身，使用操作系统原生的功能，包括提供窗口，窗口的拖动、放大缩小、开闭等。另一个为渲染进程，主要负责浏览器内核对于主页面部分的渲染。这在代码中正好对应了``main.js``与``render.js``两份代码。在W3C提供的[``Electron``中文文档](https://www.w3cschool.cn/electronmanual/)中，也可以找到主进程与渲染进程两个模块所拥有的API。
 
-* 当打包完成的应用在Windows上运行时，能够看到包括最小化、关闭等Windows原生的窗口按钮，以及菜单栏等功能。而一些常见的``electron``应用，如网易云音乐、VSCode等，窗口菜单都与原生菜单大相径庭。通过使用其菜单的功能后能够发现，菜单的本质还是Windows原生的菜单的样式修改，那么通过使用主进程提供的API，即可完成一个窗口的样式自定义。
+* 当打包完成的应用在Windows上运行时，能够看到包括最小化、关闭等Windows原生的窗口按钮，以及菜单栏等功能。而一些常见的``electron``应用，如网易云音乐、VSCode等，窗口菜单都与原生菜单大相径庭。在Windows中，通过对这些应用打开时会出现白屏的情况可以判断出，他们去除了原生的窗口与菜单栏，通过纯Web实现了一个菜单栏。
+
+* 那么如何构建一个自定义的窗口。``electron``的``main``进程中就提供了去除原生窗口与菜单栏的功能。
+
+  * 通过设置frame为false来创建一个frameless Window
+
+    ```js
+    // main.js
+    mainWindow = new BrowserWindow({
+      // ...
+      frame: false
+    })
+    ```
+
+  * 使用chrome内核下的拖拽样式实现原生的菜单栏拖拽功能。在使用该样式属性的同时，需要注意该属性会被子元素继承，导致子元素中的如点击事件失效，所以有自定义事件的自元素需要去除该属性。
+
+    ```scss
+    // header.scss
+    .header {
+      -webkit-app-region: drag;
+      .icon-group {
+        -webkit-app-region: no-drag; // 去除菜单栏功能按钮的拖拽属性
+      }
+    }
+    ```
+  
+  * 补充完整header的样式后，即可实现一个自定义版的顶部窗口菜单栏。而此时最小化、最大化、关闭窗口等功能同样也需要自定义实现。
+
+  * 对原生窗口的操作是建立在主(``main``)进程中的，而自定义化菜单的处理是在渲染(``render``)进程中进行的。此时就需要通过``electron``的ipcMain建立两个进程之间的通信，使主进程监听来自于渲染进程的事件通知，如关闭、最大最小化窗口等事件。
+
+    ```js
+    // main.js
+    import { ipcMain } from 'electron';
+    const ipc = ipcMain;
+    const mainWindow = new BrowserWindow({
+      // ...
+    })
+    /* 当ipcMain接收到以下三个类型为名称的事件时，就会对主进程窗口进行相应的操作 */
+    // 窗口最小化
+    ipc.on('min',() => {
+      mainWindow.minimize();
+    })
+    // 窗口最大化
+    ipc.on('max', () => {
+      if(mainWindow.isMaximized()) {
+        mainWindow.restore();  
+      } else {
+        mainWindow.maximize(); 
+      }
+    })
+    // 关闭窗口
+    ipc.on('close', () => {
+      mainWindow.close();
+    })
+    ```
+
+  * 在渲染进程增加关闭、最大最小化等按钮组的功能，并通过``ipcMain``模块发送事件通知给主进程。反之，渲染进程也可以通过``remote``模块监听来自于主进程的变化。
+
+    ```html
+    <!-- header.vue -->
+    <div class="icon-group">
+      <div class="icon-group-item" title="设置">
+        <a-icon type="setting"></a-icon>
+      </div>
+      <a-divider type="vertical" />
+      <div class="icon-group-item" @click="handleMinus('min')" title="最小化">
+        <a-icon type="minus"></a-icon>
+      </div>
+      <div class="icon-group-item" @click="handleMax('max')" :title="isMax?'缩小':'全屏'">
+        <a-icon :type="isMax?'switcher':'border'"></a-icon>
+      </div>
+      <div class="icon-group-item" @click="handleClose" title="退出">
+        <a-icon type="close"></a-icon>
+      </div>
+    </div>
+    ```
+
+    ```js
+    const {ipcRenderer: ipc} = require('electron');
+    import { remote } from 'electron';
+    export default {
+      data() {
+        return {
+          isMax: false,
+        }
+      },
+      methods: {
+        // 关闭窗口
+        handleClose() {
+          ipc.send('close');
+        },
+        // 最小化窗口
+        handleMinus() {
+          ipc.send('min');
+        },
+        // 最大化窗口
+        handleMax() {
+          ipc.send('max');
+        },
+      },
+      mounted() {
+        // 监听窗口是否最大化
+        window.addEventListener('resize', () => {
+          // 通过remote判断主进程窗口是否最大化。
+          this.isMax = remote.getCurrentWindow().isMaximized();
+        })
+      },
+    }
+    ```
+
+  * 当去除原生Windows窗口后，可以发现在应用打开时，会出现一个短暂的白屏，这是页面在渲染中的一个正常表现，在``electron``的主进程初次渲染的生命周期中，会先加载一个浏览器窗口，而白屏就是这个浏览器窗口已经加载完成，但页面还在渲染中的一个阶段。想要减少白屏对于用户体验的影响，那么就要提高页面首次渲染的性能。性能优化是一个老生常谈的话题，这里不多做讨论。我们可以使用另一个方法来完全去除白屏。
+
+  * 因为白屏阶段是浏览器加载完成后直接展示的情况，所以我们可以选择不展示加载完成的浏览器窗口，待页面渲染也完成后，浏览器窗口再与之一同展示。以此来完全“去除”白屏。
+
+    ```js
+    // 更换浏览器窗口展示的生命周期
+    mainWindow.on('ready-to-show', () => {
+      mainWindow.show()
+    })
+    ```
+  
+  * 不过这种去除的方法只是单纯的去掉了白屏，应用完全展示的时间还是没有任何减少的，应用本身打开性能的提升，还是要通过脚踏实地的性能优化来实现。
+
+  * 至此，一个功能完善的自定义窗口就已经实现完成了。
+
+    ![DIYWindow](./image/DIYWindow.png)
+
+* 当然，这里我们讨论的是Windows下的自定义菜单实现的方法。在``MacOS``下，我们需要使用``MacOS``本身原生红绿灯菜单按钮的功能，所以不能纯自定义实现一个菜单。所以在``MacOS``下，可以通过透明窗口的功能，自定义窗口的背景从而实现一个半自定义半原生的窗口。当然另一个比较土味的方法，也可以自己实现``MacOS``菜单按钮的样式与功能。
