@@ -318,3 +318,94 @@
     ![DIYWindow](./image/DIYWindow.png)
 
 * 当然，这里我们讨论的是Windows下的自定义菜单实现的方法。在``MacOS``下，我们需要使用``MacOS``本身原生红绿灯菜单按钮的功能，所以不能纯自定义实现一个菜单。所以在``MacOS``下，可以通过透明窗口的功能，自定义窗口的背景从而实现一个半自定义半原生的窗口。当然另一个比较土味的方法，也可以自己实现``MacOS``菜单按钮的样式与功能。
+
+## 如何让桌面应用更标准化
+
+* 在Windows中，我们经常能够看到一些通过非标准安装手段运行的exe文件，没有注册至操作系统中。这类应用的安装与卸载都会给人一种不够放心的感觉，比如在卸载的时候容易残留一些无用的缓存数据。
+
+* 而对于``electron``应用而言，其本身就是一个能够正常安装卸载的应用，这在其支持的操作系统中均能够满足。不过在最初始的情况下，这个安装卸载就是一个纯粹的安装与卸载。简单的一个体现就是安装不需要选择路径，以及在Windows中仅仅安装至了单个用户。对于这些功能的实现，仅需在``package.json``中进行配置即可。
+
+  ```json
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true, // 选择路径进行安装
+    "perMachine": true // 全操作系统用户安装
+  }
+  ```
+
+* 配置完成后，一个更加标准的桌面应用就完成了。以下为一些运行效果。
+
+  ![electron-install1](./image/electron-install1.png)
+
+  ![electron-install2](./image/electron-install2.png)
+
+  ![electron-install3](./image/electron-install3.png)
+
+## 用户数据存储
+
+> 对于一个桌面应用而言，自然会存在不记录用户行为的用户数据，比如之前保存的用户账号密码，用户对于页面或者数据的搜索记录，又或者是之前应用关闭时的窗口大小、全屏状态等。这些数据并没有必要储存至数据库，那么缓存的功能就落到了前端。
+
+* 最浅显的前端缓存思路，由于``Electron``的渲染核心还是一个以``Chrome``作为内核的Web界面。而又在``Vue``框架下，所以很自然就能想到使用``VueX``与``localStorage``两种方法。
+
+  * VueX：主要用于组件间传值，为需要暂存的页面参数提供存储功能，使用方法无特殊点，具体可见[VueX的使用](https://github.com/fff455/tech-share/blob/master/Vue/Vuex%E7%9A%84%E4%BD%BF%E7%94%A8.md)一文。``VueX``所存储的内容存在于内存中。
+
+  * localStorage：由于``electron``内核使用的是``Chrome``，所以这里的``localStorage``与浏览器的本地缓存完全一致。``localStorage``所存储的内容存于硬盘中。
+
+* 对比两种常用方法，``VueX``很明显无法满足我们的需求，对于网页而言，界面刷新后，存储内存的数据就会被清空，无法进行保存。
+
+* 而``localStorage``从功能实现角度考虑，能够符合需求，储存的用户数据也会落于用户本地磁盘当中。界面的刷新与桌面应用的退出均不会对存储的内容产生影响。但仔细思考一下依旧存在问题：
+
+  1. 仅支持字符串类型，对于多类型数据的处理并不是很方便。
+  
+  2. 存在安全性问题，尤其是用户密码，可能由于xss攻击而泄漏信息。
+
+  3. localStorage的容错性不高，如果存在桌面应用程序崩溃或意外退出的清空，可能会存在数据丢失。
+
+  3. 最关键的点，由于``localStorage``是浏览器的功能，而浏览器又仅存在于渲染进程中，所以``localStorage``仅能在渲染进程中起作用。
+
+* 这个时候就需要换一种思路，使用一个专门用于``electron``存储数据的模块——``electron-store``。对比于``localStorage``，前者的劣势反之就是``electron-store``的优势：
+
+  1. ``electron-store``的数据同样存储于本地磁盘，其本质在``Windows``中与标准桌面应用的用户数据同理，在``MacOS``中则与App文稿与数据同理。甚至在应用正常卸载后仍能存在。为此，若作为一个交互友好的桌面应用，还需要在``package.json``中添加以下配置以在卸载的时候删除这些用户数据。
+
+    ```json
+    "nsis": {
+      "deleteAppDataOnUninstall": true,
+    }
+    ```
+  
+  2. 同样因为是桌面应用的本地用户数据，所以``electron-store``同样能够支持在主进程中进行使用。
+
+  3. ``electron-store``通过原子写入至本地磁盘，若程序存在问题导致应用意外退出，对数据的存储不存在影响。
+
+  4. 在使用上，``electron-store``的API更加完善，如能够配置一些默认值，这对于类似窗口大小数据的相关的写法来说是较为友好的。
+
+* 添加``electron-store``依赖
+
+  ```shell
+  $ npm install electron-store
+  ```
+
+* 使用示例
+
+  ```js
+  const Store = require('electron-store');
+ 
+  const schema = {
+      foo: {
+          type: 'number',
+          maximum: 100,
+          minimum: 1,
+          default: 50
+      },
+      bar: {
+          type: 'string',
+          format: 'url'
+      }
+  };
+  
+  const store = new Store({schema});
+  
+  console.log(store.get('foo')); //=> 50
+  
+  store.set('foo', '1'); // [Error: Config schema violation: `foo` should be number]
+  ```
