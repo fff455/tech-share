@@ -23,6 +23,8 @@
 * [RedOvO](https://github.com/RedOvO)
 * [xiaobaiha](https://github.com/xiaobaiha)
 * [wxyhhh](https://github.com/wxyhhh)
+* [trav](https://github.com/travmygit)
+* [cosunny](https://github.com/cosunny)
 <!-- MEMBER-END -->
 
 <!-- NEW CONTENT-START -->
