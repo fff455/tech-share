@@ -519,6 +519,101 @@
   }
   ```
 
+### 模块动态注册
+
+* ``VueX``能在写法、数据维护上，能为开发人员带来极大的便利，同时也能优化代码结构，从而提升业务代码的性能。再度回到最开始全局挂载``VueX``的代码部分。
+
+  ```js
+  // main.js
+  const store = new Vuex.Store({})
+
+  new Vue({
+    el: '#app',
+    store, //全局挂载Vuex
+    router,
+    components: { App },
+    template: '<App/>'
+  })
+  ```
+
+* ``store``会在``Vue``实例创建的时候，就被静态的一次性的全局挂载在实例中。
+
+* 众所周知，``Vue``框架本身更适应于支持中小型的单页面应用。全局挂载的模式也符合单页面应用的设计理念
+
+* 但在实际生产中，不乏使用在架构更加复杂的项目当中。如果用于一个大型的多页面应用当中，``store``中所维护的不同页面的数据以及对应的处理方法都会相当庞大。打开某一个页面的同时，``VueX``所有模块的内容也会被同时加载至当前页面，而对于多页面应用来说，其中部分模块当前页面甚至从来都不会用到。这样的非按需加载，反而会对当前页面的首次加载的性能产生影响。
+
+* ``VueX``在2.3.0+版本后加入了``registerModule``方法用于动态注册``store.modules``。
+
+* 那么如何通过该方法实现一个动态加载的多页面应用。页面文件内单独注册，由于界面本身，是通过``Vue-router``寻找对应``vue``文件的代码从而加载的，这个加载过程是符合按需加载的。我们将一个页面视作一个模块，把``store``写入该页面``Vue``实例创建的生命周期当中，那么就能够实现``store``的按需加载。
+
+  ```javascript
+  import { moduleA } from './store/index.js'
+  export default {
+    name: 'pageA',
+    beforeCreated() {
+      this.$store.registerModule('pageA', moduleA) // 模块名称, 模块内容
+    }
+  }
+  ```
+
+* 这个方法可以说是一个非常容易想到的方法，也是在``Vue``框架下，优先能想到的按需加载方案。但如果每个用到``Vuex``的页面都一个引入的代码，这样麻烦的写法必然得不到强迫症开发的认可。
+
+* 所以可以换一个思路，既然每个需要使用的页面都需要这样一个动态注册的代码，这一份相同的代码，是不是可以作为一份混入(``mixin``)来使用。但作为一份混入文件的同时，又要避免每个文件都写重复代码来引入一遍。那就可以通过全局挂载混入来解决这个问题。
+
+* 由于是全局加载，同时还需要考虑不需要注册``Vuex``的页面，以及需要避免重复的注册。
+
+  ```javascript
+  // dynamic-regist-vuex.js
+  module.export = {
+    // install方法用于全局注册
+    install: (Vue) => {
+      // 全局混入
+      Vue.mixin({
+        beforeCreate() {
+          // 判断当前页面是否需要注册Vuex，过滤无需注册的页面组件
+          if (this.$options.needVuex) {
+            // 遍历当前已经存在的模块避免重复注册
+            const currModules = this.$store._modules.root._children;
+            const isDulp = Object.keys(currModules).some(mod => mod === this.$options.name);
+            //避免重复注册
+            if (!isDulp) {
+              // 动态引入Vuex中的对应模块并动态注册至当前vue实例
+              const res = require("../store/module/" + name);
+              this.$store.registerModule(this.$options.name, res.default);
+            }
+          }
+        },
+      });
+    },
+  };
+  ```
+
+  ```javascript
+  // main.js
+  import dynamicRegistVuex from './dynamic-regist-vuex.js';
+  Vue.use(dynamicRegistVuex); // 全局挂载动态加载的混入
+  const store = new Vuex.Store({})
+
+  new Vue({
+    el: '#app',
+    store, //全局挂载Vuex
+    router,
+    components: { App },
+    template: '<App/>'
+  })
+  ```
+
+  ```javascript
+  // pagaA.vue
+  export default {
+    // 页面组件必须注明这两个属性
+    name: 'pageA',
+    needVuex: true
+  }
+  ```
+
+* 这个方案同样限制，页面组件的``name``必须于其在``stote.modules``中命名空间的名称保持一致。另外就需要在需要需要注册的页面中增加一个属性来标注是否使用了``Vuex``。
+
 ### 结语
 
 Vuex可以说是Vue中相当重要的一块内容。对于兄弟组件之间的传值，系统的一些全局状态控制都有很大的帮助。本文通过参考官方文档以及通过demo对Vuex的使用，对Vuex大部分的内容进行了介绍。简单运用的话很快就能上手，但如果想要更熟练的运用，以及把Vuex设计的与整个工程更加匹配，需要更深入的学习，以及更多的开发经验。
