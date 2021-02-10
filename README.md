@@ -27,7 +27,15 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-
+* [Adam优化器详解.md](https://github.com/fff455/tech-share/tree/master/MachineLearning/Adam优化器详解.md) 2021-02-10 update.
+* [FM算法.md](https://github.com/fff455/tech-share/tree/master/MachineLearning/FM算法.md) 2021-02-10 update.
+* [NCE-PLRec算法.md](https://github.com/fff455/tech-share/tree/master/MachineLearning/NCE-PLRec算法.md) 2021-02-10 update.
+* [RecBole开源框架.md](https://github.com/fff455/tech-share/tree/master/MachineLearning/RecBole开源框架.md) 2021-02-10 update.
+* [计算最佳传输.md](https://github.com/fff455/tech-share/tree/master/MachineLearning/计算最佳传输.md) 2021-02-10 update.
+* [Electron-Vue+Python项目实践.md](https://github.com/fff455/tech-share/tree/master/Vue/Electron-Vue+Python项目实践.md) 2021-02-10 update.
+* [Vue+TypeScript项目实践.md](https://github.com/fff455/tech-share/tree/master/Vue/Vue+TypeScript项目实践.md) 2021-02-10 update.
+* [Vuex的使用.md](https://github.com/fff455/tech-share/tree/master/Vue/Vuex的使用.md) 2021-02-10 update.
+* [Vue组件通信整理.md](https://github.com/fff455/tech-share/tree/master/Vue/Vue组件通信整理.md) 2021-02-10 update.
 <!-- NEW CONTENT-END -->
 
 > 更多内容或者加入我们，欢迎关注我们的公众号  
