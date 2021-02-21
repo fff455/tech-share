@@ -10,6 +10,7 @@
 * [Golang](https://github.com/fff455/tech-share/tree/master/Golang)
 * [HTML](https://github.com/fff455/tech-share/tree/master/HTML)
 * [JavaScript](https://github.com/fff455/tech-share/tree/master/JavaScript)
+* [Linux](https://github.com/fff455/tech-share/tree/master/Linux)
 * [MachineLearning](https://github.com/fff455/tech-share/tree/master/MachineLearning)
 * [Node](https://github.com/fff455/tech-share/tree/master/Node)
 * [React](https://github.com/fff455/tech-share/tree/master/React)
@@ -31,6 +32,7 @@
 ## New Content
 * [前端重构.md](https://github.com/fff455/tech-share/tree/master/Engineering/前端重构.md) 2021-02-21 update.
 * [滚动穿透.md](https://github.com/fff455/tech-share/tree/master/CSS/滚动穿透.md) 2021-02-21 update.
+* [memcg-1.md](https://github.com/fff455/tech-share/tree/master/Linux/memcg-1.md) 2021-02-21 update.
 <!-- NEW CONTENT-END -->
 
 > 更多内容或者加入我们，欢迎关注我们的公众号  
