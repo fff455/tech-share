@@ -33,6 +33,8 @@
 * [memcg-1.md](https://github.com/fff455/tech-share/tree/master/Linux/memcg-1.md) 2021-02-21 update.
 * [ShapleyValue算法.md](https://github.com/fff455/tech-share/tree/master/MachineLearning/ShapleyValue算法.md) 2021-02-28 update.
 * [前端离线化.md](https://github.com/fff455/tech-share/tree/master/JavaScript/前端离线化.md) 2021-02-28 update.
+* [Vuex的使用.md](https://github.com/fff455/tech-share/tree/master/Vue/Vuex的使用.md) 2021-02-28 update.
+* [Vue全局挂载整理.md](https://github.com/fff455/tech-share/tree/master/Vue/Vue全局挂载整理.md) 2021-02-28 update.
 <!-- NEW CONTENT-END -->
 
 > 更多内容或者加入我们，欢迎关注我们的公众号  
