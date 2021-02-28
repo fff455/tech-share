@@ -564,7 +564,7 @@
 
   ```javascript
   // dynamic-regist-vuex.js
-  module.export = {
+  module.exports = {
     // install方法用于全局注册
     install: (Vue) => {
       // 全局混入
