@@ -30,8 +30,6 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [前端重构.md](https://github.com/fff455/tech-share/tree/master/Engineering/前端重构.md) 2021-02-21 update.
-* [滚动穿透.md](https://github.com/fff455/tech-share/tree/master/CSS/滚动穿透.md) 2021-02-21 update.
 * [memcg-1.md](https://github.com/fff455/tech-share/tree/master/Linux/memcg-1.md) 2021-02-21 update.
 <!-- NEW CONTENT-END -->
 
