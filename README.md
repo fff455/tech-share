@@ -31,8 +31,6 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [ShapleyValue算法.md](https://github.com/fff455/tech-share/tree/master/MachineLearning/ShapleyValue算法.md) 2021-02-28 update.
-* [前端离线化.md](https://github.com/fff455/tech-share/tree/master/JavaScript/前端离线化.md) 2021-02-28 update.
 * [Vuex的使用.md](https://github.com/fff455/tech-share/tree/master/Vue/Vuex的使用.md) 2021-02-28 update.
 * [Vue全局挂载整理.md](https://github.com/fff455/tech-share/tree/master/Vue/Vue全局挂载整理.md) 2021-02-28 update.
 * [从零开始写软渲染器00.md](https://github.com/fff455/tech-share/tree/master/GameDev/从零开始写软渲染器00.md) 2021-03-01 update.
