@@ -2,7 +2,7 @@
  * @Author: feizhijun
  * @Date: 2021-03-06 18:09:23
  * @LastEditors: feizhijun
- * @LastEditTime: 2021-03-06 18:15:08
+ * @LastEditTime: 2021-03-07 20:46:52
  * @Description: desc
 -->
 
@@ -52,7 +52,7 @@ CSR 能做到切换页面时无刷新更新，前端监听路由的变化来实�
 
 ### genesis
 
-Genesis 是基于 Vue 的 SSR 项目，它在页面的 SSR 之上，封装了一层聚合服务的概念，用来管理路由。一个聚合服务就是一个 App，SSR 与前端结合使用。提供出来一个单独的库来提供服务端与前端的路由同步。
+[Genesis](https://github.com/fmfe/genesis) 是基于 Vue 的 SSR 项目，它在页面的 SSR 之上，封装了一层聚合服务的概念，用来管理路由。一个聚合服务就是一个 App，SSR 与前端结合使用。提供出来一个单独的库来提供服务端与前端的路由同步。
 
 #### 优劣势
 
