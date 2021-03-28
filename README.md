@@ -31,8 +31,7 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [从零开始写软渲染器03.md](https://github.com/fff455/tech-share/tree/master/GameDev/从零开始写软渲染器03.md) 2021-03-21 update.
-* [Vue2.6.x源码阅读.md](https://github.com/fff455/tech-share/tree/master/Vue/Vue2.6.x源码阅读.md) 2021-03-21 update.
+* [HTTPS.md](https://github.com/fff455/tech-share/tree/master/Engineering/HTTPS.md) 2021-03-28 update.
 <!-- NEW CONTENT-END -->
 
 > 更多内容或者加入我们，欢迎关注我们的公众号  
