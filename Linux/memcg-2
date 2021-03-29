@@ -1,0 +1,106 @@
+
+### 1 move lru_add_page_tail func to huge_memory.c
+
+> 函数lru_add_page_tail只用于大页，放到huge_memory.c。
+注： lru_add_page_tail 用于xx
+
+### 2 mm/thp: use head for head page in lru_add_page_tail
+
+> 把lru_add_page_tail的参数给改了，
+
+### 3 mm/thp: Simplify lru_add_page_tail()
+
+> 简化了 lru_add_page_tail()
+
+### 4  mm/thp: narrow lru
+
+> 修改lru_lock 和 页缓存的xa_lock的锁序（保留local_irq_disable）
+
+> 1. 当这个系列创造了per-memcg的lru lock，它需要 透明大页的memcg在获取锁
+    的时候很稳定。 目前这个工作是在THP的refcount被冻结之后做的，以确保
+    页的memcg不改变。
+> 2. 先前，lock_page_memcg的move_lock嵌套在lru_lock里面。 但是现在lru_lock
+    需要嵌套在move_lock，所以在lru_lock之前使用lock_page_memcg()来固化page
+    memcg变得可行。 这个机制并不会在这个系列中直接使用，但我们会打开它。 
+
+### 5 mm/vmscan: remove unnecessary lruvec adding
+
+...
+
+> 调整move_pages_to_lru 里面的代码顺序，防止死锁。
+
+### 6. mm/rmap: stop store reordering issue on page->mapping
+
+> 改成WRITE_ONCE
+
+### 7. mm: page_idle_get_page() does not need lru_lock
+
+> page_idle_get_page() does not need lru_lock
+
+
+### 8. mm/memcg: add debug checking in lock_page_memcg
+
+> lock_page_memcg 加上CONFIG_PROVE_LOCKING的检查
+
+### 9. mm/swap.c: fold vm event PGROTATED into pagevec_move_tail_fn
+
+> 简化pagevec_move_tail_fn的参数
+
+> rotate_reclaimable_page 是干啥的？
+
+
+### 10. mm/lru: move lock into lru_note_cost 
+
+> 在lru_note_cost里加锁，因为它cycle up on memcg
+tree
+
+
+### 11. mm/vmscan: remove lruvec reget in move_pages_to_lru
+
+> 所有页都需要从这个lruvec脱离。并且脱离的过程禁止memcg迁移
+
+### 12. mm/mlock: remove lru_lock on TestClearPageMlocked
+
+> munlock_vma_page中的函数用PageLocked来保护就够了
+
+### 13. mm/mlock: remove __munlock_isolate_lru_page
+
+> 把_munlock_isolate_lru_page放到__munlock_pagevec里，clean up
+
+### 14. mm/lru: introduce TestClearPageLRU
+
+> 引入TestClearPageLRU
+
+
+### 15. mm/compaction: do page isolation first in compaction
+
+> Currently, compaction would get the lru_lock and then do page isolation
+which works fine with pgdat->lru_lock, since any page isoltion would
+compete for the lru_lock. If we want to change to memcg lru_lock, we
+have to isolate the page before getting lru_lock, thus isoltion would
+block page's memcg change which relay on page isoltion too. Then we
+could safely use per memcg lru_lock later.
+
+> The new page isolation use previous introduced TestClearPageLRU() +
+pgdat lru locking which will be changed to memcg lru lock later.
+
+> 在pgdat->lru_lock之前去做页表分隔(page isolation)
+
+### 16. mm/swap.c: serialize memcg changes in pagevec_lru_move_fn
+
+> So we need TestClearPageLRU to block isolate_lru_page(), that serializes
+the memcg change. and then removing the PageLRU check in move_fn callee
+as the consequence.
+
+### 17. mm/lru: replace pgdat lru_lock with lruvec lock
+
+> 重头 把pgdat lru_lock 替换成lruvec lock
+
+
+### 18. mm/lru: introduce the relock_page_lruvec function
+
+> 引入一些lruvec lock的relock函数
+
+### 19. mm/lru: revise the comments of lru_lock
+
+> 引入文档介绍/头文件说明
