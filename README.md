@@ -31,7 +31,9 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-
+* [深度学习初始化方法.md](https://github.com/fff455/tech-share/tree/master/MachineLearning/深度学习初始化方法.md) 2021-04-04 update.
+* [从零开始写软渲染器04.md](https://github.com/fff455/tech-share/tree/master/GameDev/从零开始写软渲染器04.md) 2021-04-04 update.
+* [从零开始写软渲染器05.md](https://github.com/fff455/tech-share/tree/master/GameDev/从零开始写软渲染器05.md) 2021-04-04 update.
 <!-- NEW CONTENT-END -->
 
 > 更多内容或者加入我们，欢迎关注我们的公众号  
