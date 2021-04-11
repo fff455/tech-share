@@ -213,6 +213,7 @@
       ```
 
     4. 字符串格式化转换方法**camelize**(下划线字符串驼峰化)、**capitalize**(字符串大写)、hyphenate(驼峰字符串下划线化)。字符串转换方法都使用了上述``cached``方法作为性能优化的技巧。
+
       ```js
       // 使用cached方法的camelize
       const camelizeRE = /-(\w)/g
@@ -220,6 +221,143 @@
         return str.replace(camelizeRE, (_, c) => c ? c.toUpperCase() : '')
       })
       ```
+    
+    5. **looseEqual**: 比较两个对象是否相等。在js中无法通过``==``对两个进行比较，而通过内存地址进行比较。从实际使用意义来考虑，我们通常会将两个各个属性值均相等的对象称为相等对象，如最简单的``{}``与``{}``相等。``looseEqual``方法就完成了这个比较功能。由于代码较长，所以这里只对它的实现思路进行描述。
+
+      - 获取入参对象a与b，方法入参类型均为``any``。
+
+      - 对比a与b的长度，长度相同的情况下，遍历a中的成员，判断每一个成员是否都在b中，且与b中对应成员的值相等。这里用的遍历方法会对a的类型进行判断，不同类型通过不同方法进行遍历，如``object``使用``Object.keys()``。
+
+      - 再对b中对成员进行相同对一遍操作，与a进行比较。排除a是b子集的情况。
+
+      - a与b中的成员存在引用类型，需要进行递归。
+
+      - 该思路的实现思路其实比较简单，类似比较两个集合是否相同。关注点其实更应该落在其对于类型的处理上，先用``typeof``来对引用类型与非引用类型进行区分。非引用类型对处理会比较简单，可以通过``===``进行比较，也可以通过转``String``类型进行比较。而引用类型的处理，具体会对Object、Array、Date三个类型进行区别处理。
+
+      - 由于该方法主要服务于Vue的数据比较，不存在比较正则表达式的情况，所以方法没有对正则表达式类型进行比较处理。如果需要考虑其他类型，可以在源码中添加``else-if``逻辑。
+
+    6. **once**: 让一个事件(函数)只调用一次。Vue中的``v-once``指令就是应用了这个方法的思想。
+
+      ```js
+      /**
+       * Ensure a function is called only once.
+       */
+      export function once (fn: Function): Function {
+        let called = false
+        return function () {
+          // 通过闭包判断该方法是否已经被调用
+          if (!called) {
+            called = true
+            fn.apply(this, arguments)
+          }
+        }
+      }
+      ```
+
+* 从``shared``中可以学习到一些标准化工程的构建思路，提前定义好工程中所需要的常量与工具类方法，一来能够有效的精简工程中的通用代码处理逻辑，二来也能够后续的代码维护。同时通过源码阅读，也能够看到一个好的工程离不开优美规范的代码。以及在代码编写过程中无时不想着的性能优化。三者也能学习到能够在面试中可能会考到的工具类方法的算法逻辑。
 
 
-* 从``shared``中可以学习到一些标准化工程的构建思路，提前定义好工程中所需要的常量与工具类方法，一来能够有效的精简工程中的通用代码处理逻辑，二来也能够后续的代码维护。同时通过源码阅读，也能够看到一个好的工程离不开优美规范的代码。以及在代码编写过程中无时不想着的性能优化。
+### platform
+
+#### Vue Web端入口
+
+* 熟悉完工具类方法后继续从Vue的入口继续入手。从上文中，已经简单了解到``platform``就是整个Vue工程的入口处。兼容不同平台来对Vue做不同的启动处理。
+
+* 通过入口文件中引入的``Vue``找到网页端下的构造函数所在的位置``src/platform/web/runtime/index.js``。查看其引入的内容，可以发现该入口下依旧引入了``Vue``，故可知当前文件则是在Web端下进行的封装。继续看后续的代码。
+
+  ```js
+  // src/platform/web/runtime/index.js
+
+  // import 部分
+  import Vue from 'core/index' // core封装导出的Vue
+  // ...
+
+  // 挂载浏览器模式下的专用方法，对于开发者无用
+  // install platform specific utils
+  Vue.config.mustUseProp = mustUseProp
+  Vue.config.isReservedTag = isReservedTag
+  Vue.config.isReservedAttr = isReservedAttr
+  Vue.config.getTagNamespace = getTagNamespace
+  Vue.config.isUnknownElement = isUnknownElement
+
+  // 在option中挂载指令与组件
+  // install platform runtime directives & components
+  extend(Vue.options.directives, platformDirectives)
+  extend(Vue.options.components, platformComponents)
+
+  // ⭐️使用 虚拟DOM 更新 真实浏览器DOM 的核心算法
+  // install platform patch function
+  Vue.prototype.__patch__ = inBrowser ? patch : noop // 非浏览器下不作操作，noop来自于上文中的util.js，等价于no operation
+
+  // 挂载在Vue实例上的最原始的 $mount 方法，用于调用挂载组件的方法
+  Vue.prototype.$mount = function (
+    el?: string | Element,
+    hydrating?: boolean
+  ): Component {
+    // 获取元素并调用 mountComponent 方法
+    el = el && inBrowser ? query(el) : undefined
+    return mountComponent(this, el, hydrating)
+  }
+
+  // 再往下的部分则为使用 vue-devtool 插件时才需要的逻辑，可以暂时不作考虑
+  // devtools global hook
+  /* istanbul ignore next */
+  if (inBrowser) {
+    // ...
+  }
+
+  export default Vue
+  ```
+
+* 总结一下，Web端下的Vue入口文件做的工作主要为：
+
+  1. 引入了``core``中的``Vue``
+
+  2. 配置了用于转化虚拟DOM为真实DOM的``__patch__``方法
+
+  3. 定义了原生的 ``$mount`` 方法
+
+* 为保持思路连贯，此处可直接转跳至``core``中的``Vue构造函数``
+
+
+### core
+
+#### Vue构造函数
+
+* ``core``目录下的``index.js``对``Vue``构造函数依旧进行了一定程度的封装，先除开封装的内容，直接进入到``Vue``真正的构造函数所在的位置``src/core/instance/index.js``。
+
+  ```js
+  /* Vue 构造函数 */
+  function Vue (options) {
+    // 入参 options 即为开发者new一个Vue实例时，Vue中传入的带有data、method、watch等属性的对象。
+    if (process.env.NODE_ENV !== 'production' &&
+      !(this instanceof Vue) // 判断是否通过 new 调用 Vue 构造函数
+    ) {
+      warn('Vue is a constructor and should be called with the `new` keyword')
+    }
+    this._init(options) // 初始化 Vue 实例
+  }
+
+  initMixin(Vue) // 混入初始化方法，构造函数中的 Vue.prototype._init()方法来自于其中
+  stateMixin(Vue) // 混入 状态处理 的方法
+  eventsMixin(Vue) // 混入 事件 的方法
+  lifecycleMixin(Vue) // 混入 生命周期 的方法
+  renderMixin(Vue) // 混入 渲染相关 的方法
+  ```
+
+* 继续进入到含有初始化方法的``initMixin()``
+
+  ```js
+  // src/core/instance/init.js
+  let uid = 0 // 每个类型的实例(组件)都含有的唯一标识，在vue-cli脚手架下，每个Vue文件就是一个单独的uid，可以通过this._uid获取。
+  export function initMixin (Vue: Class<Component>) {
+    Vue.prototype._init = function (options?: Object) {
+      /* 定义Vue实例 */
+      const vm: Component = this
+      // a uid
+      vm._uid = uid++
+
+      // continued...
+    }
+  }
+  ```
