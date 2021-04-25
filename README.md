@@ -33,6 +33,7 @@
 ## New Content
 * [Vue2.6.x源码阅读.md](https://github.com/fff455/tech-share/tree/master/Vue/Vue2.6.x源码阅读.md) 2021-04-18 update.
 * [前端监控.md](https://github.com/fff455/tech-share/tree/master/Engineering/前端监控.md) 2021-04-20 update.
+* [游戏中的几种投影视图.md](https://github.com/fff455/tech-share/tree/master/GameDev/游戏中的几种投影视图.md) 2021-04-25 update.
 <!-- NEW CONTENT-END -->
 
 > 更多内容或者加入我们，欢迎关注我们的公众号  
