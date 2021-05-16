@@ -40,6 +40,7 @@
 * [从零开始写软渲染器00.md](https://github.com/fff455/tech-share/tree/master/GameDev/从零开始写软渲染器00.md) 2021-05-09 update.
 * [从零开始写软渲染器05.md](https://github.com/fff455/tech-share/tree/master/GameDev/从零开始写软渲染器05.md) 2021-05-09 update.
 * [从零开始写软渲染器06.md](https://github.com/fff455/tech-share/tree/master/GameDev/从零开始写软渲染器06.md) 2021-05-09 update.
+* [静态资源重试.md](https://github.com/fff455/tech-share/tree/master/Engineering/静态资源重试.md) 2021-05-16 update.
 <!-- NEW CONTENT-END -->
 
 > 更多内容或者加入我们，欢迎关注我们的公众号  
