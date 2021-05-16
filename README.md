@@ -34,13 +34,14 @@
 * [1.准备工作.md](https://github.com/fff455/tech-share/tree/master/Vue/Vue2.6.x源码阅读/1.准备工作.md) 2021-05-09 update.
 * [2.目录结构分析.md](https://github.com/fff455/tech-share/tree/master/Vue/Vue2.6.x源码阅读/2.目录结构分析.md) 2021-05-09 update.
 * [3.源码阅读-shared.md](https://github.com/fff455/tech-share/tree/master/Vue/Vue2.6.x源码阅读/3.源码阅读-shared.md) 2021-05-09 update.
-* [4.源码阅读-platform.md](https://github.com/fff455/tech-share/tree/master/Vue/Vue2.6.x源码阅读/4.源码阅读-platform.md) 2021-05-09 update.
-* [5.源码阅读-core-Vue构造函数.md](https://github.com/fff455/tech-share/tree/master/Vue/Vue2.6.x源码阅读/5.源码阅读-core-Vue构造函数.md) 2021-05-09 update.
-* [6.源码阅读-core-组件挂载.md](https://github.com/fff455/tech-share/tree/master/Vue/Vue2.6.x源码阅读/6.源码阅读-core-组件挂载.md) 2021-05-09 update.
 * [从零开始写软渲染器00.md](https://github.com/fff455/tech-share/tree/master/GameDev/从零开始写软渲染器00.md) 2021-05-09 update.
 * [从零开始写软渲染器05.md](https://github.com/fff455/tech-share/tree/master/GameDev/从零开始写软渲染器05.md) 2021-05-09 update.
 * [从零开始写软渲染器06.md](https://github.com/fff455/tech-share/tree/master/GameDev/从零开始写软渲染器06.md) 2021-05-09 update.
 * [静态资源重试.md](https://github.com/fff455/tech-share/tree/master/Engineering/静态资源重试.md) 2021-05-16 update.
+* [4.源码阅读-platform.md](https://github.com/fff455/tech-share/tree/master/Vue/Vue2.6.x源码阅读/4.源码阅读-platform.md) 2021-05-16 update.
+* [5.源码阅读-core-Vue构造函数.md](https://github.com/fff455/tech-share/tree/master/Vue/Vue2.6.x源码阅读/5.源码阅读-core-Vue构造函数.md) 2021-05-16 update.
+* [6.源码阅读-core-组件挂载.md](https://github.com/fff455/tech-share/tree/master/Vue/Vue2.6.x源码阅读/6.源码阅读-core-组件挂载.md) 2021-05-16 update.
+* [7.源码阅读-core-响应式原理.md](https://github.com/fff455/tech-share/tree/master/Vue/Vue2.6.x源码阅读/7.源码阅读-core-响应式原理.md) 2021-05-16 update.
 <!-- NEW CONTENT-END -->
 
 > 更多内容或者加入我们，欢迎关注我们的公众号  
