@@ -31,11 +31,6 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [静态资源重试.md](https://github.com/fff455/tech-share/tree/master/Engineering/静态资源重试.md) 2021-05-16 update.
-* [4.源码阅读-platform.md](https://github.com/fff455/tech-share/tree/master/Vue/Vue2.6.x源码阅读/4.源码阅读-platform.md) 2021-05-16 update.
-* [5.源码阅读-core-Vue构造函数.md](https://github.com/fff455/tech-share/tree/master/Vue/Vue2.6.x源码阅读/5.源码阅读-core-Vue构造函数.md) 2021-05-16 update.
-* [6.源码阅读-core-组件挂载.md](https://github.com/fff455/tech-share/tree/master/Vue/Vue2.6.x源码阅读/6.源码阅读-core-组件挂载.md) 2021-05-16 update.
-* [7.源码阅读-core-响应式原理.md](https://github.com/fff455/tech-share/tree/master/Vue/Vue2.6.x源码阅读/7.源码阅读-core-响应式原理.md) 2021-05-16 update.
 * [C端性能优化.md](https://github.com/fff455/tech-share/tree/master/Engineering/C端性能优化.md) 2021-05-17 update.
 <!-- NEW CONTENT-END -->
 
