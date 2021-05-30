@@ -31,7 +31,7 @@
 
 <!-- NEW CONTENT-START -->
 ## New Content
-* [C端性能优化.md](https://github.com/fff455/tech-share/tree/master/Engineering/C端性能优化.md) 2021-05-17 update.
+
 <!-- NEW CONTENT-END -->
 
 > 更多内容或者加入我们，欢迎关注我们的公众号  
