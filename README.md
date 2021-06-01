@@ -32,6 +32,7 @@
 <!-- NEW CONTENT-START -->
 ## New Content
 * [7.源码阅读-core-响应式原理.md](https://github.com/fff455/tech-share/tree/master/Vue/Vue2.6.x源码阅读/7.源码阅读-core-响应式原理.md) 2021-05-30 update.
+* [HooksVS类组件.md](https://github.com/fff455/tech-share/tree/master/React/HooksVS类组件.md) 2021-06-01 update.
 <!-- NEW CONTENT-END -->
 
 > 更多内容或者加入我们，欢迎关注我们的公众号  
